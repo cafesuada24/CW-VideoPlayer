@@ -1,6 +1,5 @@
 import sys
 import traceback
-
 from tkinter import *
 from tkinter import ttk
 
@@ -21,7 +20,8 @@ class MainFrame(ttk.Frame):
     def __create_widgets(self):
         ttk.Label(
                 self,
-                text='Select an option by clicking one of the buttons below').grid(row=0, column=0, columnspan=3)
+                text='Select an option by clicking one of the buttons below'
+                ).grid(row=0, column=0, columnspan=3)
         
         ttk.Button(
                 self,

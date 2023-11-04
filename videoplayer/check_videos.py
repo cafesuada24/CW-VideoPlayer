@@ -40,10 +40,10 @@ class CheckVideosFrame(VideoFrame):
            widget.grid(padx=5)
     
     def __check_video(self):
-        id = int(self._video_id.get())
-        self._info_text['state'] = 'normal'
-        self._info_text.delete('1.0', END);
-        video_attr = (self._db.get_name(id), self._db.get_director(id), self._db.get_rating(id), self._db.get_play_count(id))
-        for attr, val in zip(self.__movie_infors, video_attr):
-            self._info_text.insert(END, f'{attr}: {val}\n')
-        self._info_text['state'] = 'disabled'
+        id = self._video_id.get()
+        try:
+            video_attr = (self._db.get_name(id), self._db.get_director(id), self._db.get_rating(id), self._db.get_play_count(id))
+            video_attr = (f'{attr}: {val}' for attr, val in zip(self.__movie_infors, video_attr))
+            self._display_info('\n'.join(video_attr))
+        except KeyError as e:
+            self._display_info(f'Video id not found: {id}')

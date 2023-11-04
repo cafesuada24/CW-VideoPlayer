@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import NamedTuple
 import sqlite3 as sql
 
 class VideosDB:
@@ -6,7 +7,7 @@ class VideosDB:
         self.__db_file = Path(path or self.DEFAULT_DB_PATH)
         self.__conn = None
         self.__cursor = None
-
+    
     @property
     def ROOT_FOLDER(self):
         return __file__.rsplit('/', 2)[0]
@@ -45,3 +46,8 @@ class VideosDB:
         self.__conn.commit()
         self.__cursor.close()
         self.__conn.close()
+
+class UpdateTransaction(NamedTuple):
+    column: str
+    value: str
+    id: int
