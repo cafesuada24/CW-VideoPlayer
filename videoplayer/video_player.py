@@ -7,6 +7,7 @@ from tkinter import ttk
 from check_videos import CheckVideosFrame
 from create_video_list import CreateVideoListFrame
 from update_videos import UpdateVideosFrame
+from video_library import LibraryItem
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
@@ -53,7 +54,8 @@ class VideoPlayer(Tk):
 
         self.__curr_frame = None
         self.frames = {}
-
+        
+        self.__db = LibraryItem()
         self.__create_widgets()
     
     def _display_frame(self, frame):
@@ -70,9 +72,9 @@ class VideoPlayer(Tk):
 
     def __create_widgets(self):
         self.frames['main'] = MainFrame(self)
-        self.frames['check_videos'] = CheckVideosFrame(self)
-        self.frames['update_videos'] = UpdateVideosFrame(self)
-        self.frames['create_video_list'] = CreateVideoListFrame(self)
+        self.frames['check_videos'] = CheckVideosFrame(self, self.__db)
+        self.frames['update_videos'] = UpdateVideosFrame(self, self.__db)
+        self.frames['create_video_list'] = CreateVideoListFrame(self, self.__db)
 
         self._display_frame('main')
 

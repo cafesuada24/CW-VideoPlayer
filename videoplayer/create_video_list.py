@@ -4,13 +4,12 @@ from tkinter import ttk
 from video_frame import VideoFrame
 
 class CreateVideoListFrame(VideoFrame):
-    def __init__(self, root):
-        super().__init__(root)
-        
+    def __init__(self, root, db):
+        super().__init__(root, db)
         self.__err_var = StringVar()
-        self.__create_widgets()
+        self._create_widgets()
 
-    def __create_widgets(self):
+    def _create_widgets(self):
         ttk.Label(
                 self,
                 text='Playlist'
@@ -21,12 +20,18 @@ class CreateVideoListFrame(VideoFrame):
                 ).grid(pady=5, column=1, row=2, sticky=(W, S))
         ttk.Label(
                 self,
-                text='Enter movie number or name:'
+                text='Enter movie number:'
                 ).grid(pady=5, column=1, row=3, sticky=(W, S))
 
-        entry = ttk.Entry(self, width=35)
-        entry.grid(row=4, column=1, sticky=(N, W, E, S))
-        entry.focus()
+        video_entry = ttk.Entry(
+                self,
+                width=35,
+                textvariable=self._video_id,
+                validate='key',
+                validatecommand=self._number_input_validate
+                )
+        video_entry.grid(row=4, column=1, sticky=(N, W, E, S))
+        video_entry.focus()
 
         ttk.Button(
                 self,
