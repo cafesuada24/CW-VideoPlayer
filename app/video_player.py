@@ -3,10 +3,9 @@ import traceback
 from tkinter import *
 from tkinter import ttk
 
-from check_videos import CheckVideosFrame
-from create_video_list import CreateVideoListFrame
-from update_videos import UpdateVideosFrame
-from video_library import LibraryItem
+from .widgets import *
+from .core.videos_db import VideosDB
+from .core.video_library import LibraryItemCollection
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
@@ -22,45 +21,52 @@ class MainFrame(ttk.Frame):
                 self,
                 text='Select an option by clicking one of the buttons below'
                 ).grid(row=0, column=0, columnspan=3)
-        
         ttk.Button(
                 self,
                 text='Check Videos',
                 command=lambda: self._root()._display_frame('check_videos')
-                ).grid(row=1, column=0, sticky=(W, E))
+                ).grid(row=1, column=0)
         ttk.Button(
                 self,
                 text='Create Video List',
                 command=lambda: self._root()._display_frame('create_video_list')
-                ).grid(row=1, column=1, sticky=(W, E))
+                ).grid(row=1, column=1)
         ttk.Button(
                 self,
                 text='Update Videos',
                 command=lambda: self._root()._display_frame('update_videos')
-                ).grid(row=1, column=2, sticky=(W, E))
+                ).grid(row=1, column=2)
 
         for widget in self.winfo_children():
-            widget.grid(padx=5, pady=5)
+            widget.grid(padx=5, pady=5, sticky=(W, E))
 
 class VideoPlayer(Tk):
     def __init__(self):
         super().__init__()
-        self.title('Video Player')
         
+        self.__curr_frame = None
+        self.__frames = {}
+        self.__db = VideosDB()
+        self.__videos = LibraryItemCollection.from_sequences(self.__db.get_all())        
+        
+        self.title('Video Player')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-
         self.resizable(width=False, height=False)
-
-        self.__curr_frame = None
-        self.frames = {}
-        
-        self.__db = LibraryItem()
         self.__create_widgets()
+        self._display_frame('main')
+    
+    @property
+    def videos(self):
+        return self.__videos
+    
+    @property
+    def db(self):
+        return self.__db
     
     def _display_frame(self, frame):
         try:
-            frame = self.frames[frame]
+            frame = self.__frames[frame]
         except KeyError as e:
             print(f'frame not found: {frame}', file=sys.stderr)
             traceback.print_stack(file=sys.stderr)
@@ -71,13 +77,7 @@ class VideoPlayer(Tk):
             self.__curr_frame.grid(column=0, row=0, sticky=(N, S, E, W))
 
     def __create_widgets(self):
-        self.frames['main'] = MainFrame(self)
-        self.frames['check_videos'] = CheckVideosFrame(self, self.__db)
-        self.frames['update_videos'] = UpdateVideosFrame(self, self.__db)
-        self.frames['create_video_list'] = CreateVideoListFrame(self, self.__db)
-
-        self._display_frame('main')
-
-if __name__ == '__main__':
-    video_player = VideoPlayer()
-    video_player.mainloop()
+        self.__frames['main'] = MainFrame(self)
+        self.__frames['check_videos'] = CheckVideosFrame(self)
+        self.__frames['update_videos'] = UpdateVideosFrame(self)
+        self.__frames['create_video_list'] = CreateVideoListFrame(self)

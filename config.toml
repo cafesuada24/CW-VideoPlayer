@@ -1,0 +1,13 @@
+[database]
+table = 'videos'
+columns = ['video_id', 'name', 'director', 'rating', 'play_count', 'file_name']
+path.db = 'data/videos.db'
+path.schema = 'docs/dbschema.sql'
+
+[display.columns]
+id = ['id', 'name', 'director', 'rating']
+heading = ['Number', 'Name', 'Director', 'Rating']
+
+[display.columns.check]
+id = ['name', 'director', 'rating', 'play_count']
+heading = ['Name', 'Director', 'Rating', 'Play Count'] 
