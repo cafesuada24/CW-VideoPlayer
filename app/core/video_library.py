@@ -48,7 +48,7 @@ class LibraryItem:
 class LibraryItemCollection:
     def __init__(self, videos: Sequence[LibraryItem] = None):
         if videos is None:
-            videos = hash()
+            videos = []
         videos = {video.id: video for video in videos}
         self.__videos = videos
     
@@ -63,7 +63,7 @@ class LibraryItemCollection:
     def remove(self, id: int) -> None:
         del self.__videos[id]
 
-    def __getitem__(self, video_id) -> Video:
+    def __getitem__(self, video_id):
         return self.__videos[video_id]
 
     def __iter__(self):
