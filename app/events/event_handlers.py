@@ -1,6 +1,9 @@
 from .. import CONFIG
 from .events import * 
 
+LISTING_HEADING =  CONFIG['display']['columns']['check']['heading']
+LISTING_COLUMNS = CONFIG['display']['columns']['check']['id']
+
 class EventHandler:
     @staticmethod
     def eventhandler(_func):
@@ -17,9 +20,9 @@ class EventHandler:
             video_attr = (
                 f'{attr}: {val}'
                 for attr, val in zip(
-                    CONFIG['display']['columns']['check']['heading'],
+                    LISTING_HEADING,
                     event.videos[event.id].list_all(
-                        CONFIG['display']['columns']['check']['id']
+                        LISTING_COLUMNS
                     )
                 )
             )

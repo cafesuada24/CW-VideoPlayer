@@ -3,9 +3,10 @@ import traceback
 from tkinter import *
 from tkinter import ttk
 
-from .widgets import *
+from .widgets.check_videos import CheckVideosFrame
 from .core.videos_db import VideosDB
 from .core.video_library import LibraryItemCollection
+from .core.search_engine import SearchEngine
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
@@ -43,11 +44,17 @@ class MainFrame(ttk.Frame):
 class VideoPlayer(Tk):
     def __init__(self):
         super().__init__()
-        
+        # 
         self.__curr_frame = None
         self.__frames = {}
-        self.__db = VideosDB()
-        self.__videos = LibraryItemCollection.from_sequences(self.__db.get_all())        
+        # self.__db = VideosDB()
+        # self.__videos = LibraryItemCollection.from_sequences(self.__db.get_all())
+        # data = []
+        # for video in self.__videos:
+        #     video_info = video.list_all(('name', 'director'))
+        #     video_info = (text.lower() for text in video_info)
+        #     data.extend(zip(video_info, [video.id] * 2))
+        # self.__se = SearchEngine(data)
         
         self.title('Video Player')
         self.columnconfigure(0, weight=1)
@@ -56,6 +63,10 @@ class VideoPlayer(Tk):
         self.__create_widgets()
         self._display_frame('main')
     
+    @property
+    def se(self):
+        return self.__se
+
     @property
     def videos(self):
         return self.__videos
@@ -79,5 +90,5 @@ class VideoPlayer(Tk):
     def __create_widgets(self):
         self.__frames['main'] = MainFrame(self)
         self.__frames['check_videos'] = CheckVideosFrame(self)
-        self.__frames['update_videos'] = UpdateVideosFrame(self)
-        self.__frames['create_video_list'] = CreateVideoListFrame(self)
+        # self.__frames['update_videos'] = UpdateVideosFrame(self)
+        # self.__frames['create_video_list'] = CreateVideoListFrame(self)

@@ -16,15 +16,15 @@ class CreateVideoListFrame(VideoFrame):
         ttk.Label(
                 self,
                 text='Playlist'
-            ).grid(column=1, row=0, sticky=S)
+            ).grid(column=2, row=0, sticky=S)
         ttk.Label(
                 self,
                 textvariable=self.__info_var
-            ).grid(column=1, row=2, sticky=(W, S))
+            ).grid(column=2, row=2, sticky=(W, S))
         ttk.Label(
                 self,
                 text='Enter movie number:'
-            ).grid(column=1, row=3, sticky=(W, S))
+            ).grid(column=2, row=3, sticky=(W, S))
 
         video_entry = ttk.Entry(
                 self,
@@ -32,24 +32,24 @@ class CreateVideoListFrame(VideoFrame):
                 validate='key',
                 validatecommand=self._number_input_validate
             )
-        video_entry.grid(row=4, column=1, sticky=(N, W, E, S))
+        video_entry.grid(row=4, column=2, sticky=(N, W, E, S))
         video_entry.focus()
 
         self.__rm_pl_btn = ttk.Button(
                 self,
                 text='Remove from playlist'
             )
-        self.__rm_pl_btn.grid(row=5, column=1, sticky=(N, W, E, S))
+        self.__rm_pl_btn.grid(row=5, column=2, sticky=(N, W, E, S))
         self.__add_pl_btn = ttk.Button(
                 self,
                 text='Add to playlist'
             )       
-        self.__add_pl_btn.grid(row=6, column=1, sticky=(N, W, E, S))
+        self.__add_pl_btn.grid(row=6, column=2, sticky=(N, W, E, S))
         self.__play_pl_btn = ttk.Button(
                 self,
                 text='Play the playlist'
             )
-        self.__play_pl_btn.grid(row=8, column=1, sticky=(N, W, E, S))
+        self.__play_pl_btn.grid(row=8, column=2, sticky=(N, W, E, S))
 
     def _bind_events(self):
         event = PlaylistButtonClickEvent(self)

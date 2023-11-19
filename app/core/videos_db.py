@@ -11,7 +11,9 @@ class VideosDB:
     def __init__(self):
         self.__db_file = CONFIG['path']['db']
         self.__transactions = deque() 
-   
+        self.__se = None
+        self.__data = tuple
+
     def update(self, id: int, column: str, val: str | int) -> None:
         transaction = UpdateTransaction(id, column, val)
         self.__transactions.append(transaction)
@@ -20,7 +22,8 @@ class VideosDB:
         query = f"SELECT * FROM {CONFIG['table']}"
         with self:
             self.__cursor.execute(query)
-            ret = self.__cursor.fetchall()
+            ret = tuple(self.__cursor.fetchall())
+
         return tuple(ret)
 
     def __push_transactions(self):

@@ -6,7 +6,11 @@ class Event:
     
     @property
     def id(self) -> int:
-        return self._caller._video_id.get()
+        try:
+            vid = self._caller._video_id.get()
+        except:
+            vid = 0
+        return vid
 
     @property
     def videos(self):

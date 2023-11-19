@@ -48,7 +48,7 @@ class LibraryItem:
 class LibraryItemCollection:
     def __init__(self, videos: Sequence[LibraryItem] = None):
         if videos is None:
-            videos = []
+            videos = dict()
         videos = {video.id: video for video in videos}
         self.__videos = videos
     
