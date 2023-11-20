@@ -2,9 +2,11 @@ from tkinter import *
 from tkinter import ttk
 
 from .. import CONFIG
+from ..namespace import Widgets
 from .video_browser import VideoBrowser
 from .head_bar import HeadBar
 from .footer import Footer
+from .panel import *
 
 COLUMNS = CONFIG['display']['columns']
 
@@ -114,34 +116,46 @@ COLUMNS = CONFIG['display']['columns']
 
 
 class MainLayout(ttk.Frame):
-    def __init__(
-            self,
-            root,
-            head_bar=HeadBar,
-            browser=VideoBrowser,
-            rpanel=None,
-            footer=Footer
-        ):
+    _instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(MainLayout, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self, root):
         super().__init__(root)
 
-        self.__head_bar = head_bar(self)
-        self.__browser = browser(self)
-        self.__rpanel = rpanel(self)
-        self.__footer = footer(self)
+        Widgets.HEAD_BAR = HeadBar(self)
+        Widgets.FOOTER = Footer(self)
+        Widgets.BROWSER = VideoBrowser(self)
+        Widgets.UPDATE_VIDEO_PANEL = UpdateVideoPanel(self)
+        Widgets.CHECK_VIDEOS_PANEL = CheckVideosPanel(self)
+        Widgets.CREATE_VIDEO_LIST_PANEL = CreateVideoListPanel(self)
 
         self.columnconfigure(0, weight=7)
         self.columnconfigure(1, weight=3)
         self.rowconfigure(0, weight=1)
         self.rowconfigure(1, weight=8)
         self.rowconfigure(2, weight=1)
-        
-        self.__layout()
 
-    
+    def display(self, head_bar=None, browser=None, rpanel=None, footer=None):
+        self._head_bar = head_bar or Widgets.HEAD_BAR
+        self._browser = browser or Widgets.BROWSER
+        self._rpanel = rpanel
+        self._footer = footer or Widgets.FOOTER
+        self.__layout()
+        self.grid_forget()
+        self.grid(row=0, column=0, sticky=NSEW)
+
     def __layout(self):
-        self.__head_bar.grid(row=0, column=0, sticky=(N, W, E, S))
-        self.__browser.grid(row=1, column=0, sticky=(N, W, E, S))
-        self.__rpanel.grid(row=0, column=1, rowspan=2, sticky=(N, W, E, S))
-        self.__footer.grid(row=2, column=0, columnspan=2, sticky=(N, W, E, S))
+        self._head_bar.grid_forget()
+        self._browser.grid_forget()
+        self._rpanel.grid_forget()
+        self._footer().grid_forget()
+        self._head_bar.grid(row=0, column=0, sticky=NSEW)
+        self._browser.grid(row=1, column=0, sticky=NSEW)
+        self._rpanel.grid(row=0, column=1, rowspan=2, sticky=NSEW)
+        self._footer.grid(row=2, column=0, columnspan=2, sticky=NSEW)
         for children in self.winfo_children():
             children.grid(padx=5, pady=5)

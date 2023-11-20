@@ -16,7 +16,7 @@ class VideoBrowser(ttk.Frame):
             self.__browser.heading(col, text=heading)
         for col, width in zip(columns, columns_width):
             self.__browser.column(col, width=width)
-        self.__browser.grid(row=0, column=0, sticky=(N, W, E, S))
+        self.__browser.grid(row=0, column=0, sticky=NSEW)
          
     def __clear_contents(self):
         for item in self.__browser.get_children():

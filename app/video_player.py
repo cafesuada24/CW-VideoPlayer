@@ -4,6 +4,8 @@ from tkinter import *
 from tkinter import ttk
 
 from .widgets.check_videos import CheckVideosFrame
+from .widgets.create_video_list import CreateVideoListFrame
+from .widgets.update_videos import UpdateVideosFrame
 from .core.videos_db import VideosDB
 from .core.video_library import LibraryItemCollection
 from .core.search_engine import SearchEngine
@@ -41,6 +43,9 @@ class MainFrame(ttk.Frame):
         for widget in self.winfo_children():
             widget.grid(padx=5, pady=5, sticky=(W, E))
 
+    def display(self):
+        self.grid(row=0, column=0, sticky=NSEW)
+
 class VideoPlayer(Tk):
     def __init__(self):
         super().__init__()
@@ -59,7 +64,7 @@ class VideoPlayer(Tk):
         self.title('Video Player')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
-        self.resizable(width=False, height=False)
+        self.resizable(False, False)
         self.__create_widgets()
         self._display_frame('main')
     
@@ -85,10 +90,10 @@ class VideoPlayer(Tk):
             if (self.__curr_frame is not None):
                 self.__curr_frame.grid_forget()
             self.__curr_frame = frame
-            self.__curr_frame.grid(column=0, row=0, sticky=(N, S, E, W))
+            self.__curr_frame.display()
 
     def __create_widgets(self):
         self.__frames['main'] = MainFrame(self)
         self.__frames['check_videos'] = CheckVideosFrame(self)
-        # self.__frames['update_videos'] = UpdateVideosFrame(self)
-        # self.__frames['create_video_list'] = CreateVideoListFrame(self)
+        self.__frames['update_videos'] = UpdateVideosFrame(self)
+        self.__frames['create_video_list'] = CreateVideoListFrame(self)
