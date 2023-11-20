@@ -32,3 +32,6 @@ class CheckVideosPanel(ttk.Frame):
 
         for children in self.winfo_children():
             children.grid(padx=7, pady=7)
+    
+    def __show_info(self):
+        pass

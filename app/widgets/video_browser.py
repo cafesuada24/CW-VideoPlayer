@@ -6,7 +6,6 @@ class VideoBrowser(ttk.Frame):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Video Browser
         columns = ('number', 'name', 'director', 'rating')
         headings = ('Number', 'Name', 'Director', 'Rating')
         columns_width = (50, 300, 300, 150)

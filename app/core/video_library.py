@@ -11,7 +11,7 @@ class LibraryItem:
             'director': director,
             'rating': int(rating),
             'play_count': int(play_count),
-            'file_name': path
+            'file_path': path
             }
     
     def list_all(self, attrs: Sequence[str] = CONFIG['database']['columns']) -> tuple[int | str]:
@@ -36,6 +36,9 @@ class LibraryItem:
     def set_rating(self, new_rating: int) -> None:
         self.__data['rating'] = new_rating
     
+    def get_file_path(self):
+        return self.__data['file_path']
+
     def increment_play_count(self) -> None:
         self.__data['play_count'] += 1 
 

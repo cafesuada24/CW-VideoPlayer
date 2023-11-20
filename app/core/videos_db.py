@@ -23,7 +23,6 @@ class VideosDB:
         with self:
             self.__cursor.execute(query)
             ret = tuple(self.__cursor.fetchall())
-
         return tuple(ret)
 
     def __push_transactions(self):

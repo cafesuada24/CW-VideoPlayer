@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 from .search_bar import SearchBar
-from ..namespace import DB, Widgets
+from ..namespace import DB
 
 class HeadBar(ttk.Frame):
     def __init__(self, root):
@@ -32,7 +32,5 @@ class HeadBar(ttk.Frame):
     def __update_brower_items(self):
         sort_by = self.__sort_by_var.get().strip().lower()
         sort(self.__state, key=lambda val: val[sort_by], reverse=self.__sort_order_var=='Ascending')
-        Widgets.BROWSER.display_items(self.__state)
-
         
 

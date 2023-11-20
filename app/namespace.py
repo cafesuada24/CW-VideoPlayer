@@ -1,19 +1,24 @@
 from dataclasses import dataclass
 
-from .widgets import *
+import tkinter as tk
+from tkinter import ttk
 
-# @dataclass(frozen=True)
-# class Constants:
-#     DEFAULT = {
-#             'head_bar': ,
-#             'footer': ,
-#             'browser':,
-#
-#             }
-#     RPANELS = {
-#             'check_video': ,
-#             }
-#
+from .widgets import *
+from .core.videos_db import VideosDB
+from .core.video_library import LibraryItemCollection
+
+@dataclass(frozen=True)
+class Constants:
+    pass
+
+@dataclass(frozen=False)
+class DB:
+    db = VideosDB()
+    data = LibraryItemCollection.from_sequences(db.get_all())
+
+@dataclass(frozen=False)
+class Variable:
+    selected_item = tk.IntVar() 
 
 @dataclass(frozen=False)
 class Widgets:
