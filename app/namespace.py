@@ -6,19 +6,22 @@ from tkinter import ttk
 from .widgets import *
 from .core.videos_db import VideosDB
 from .core.video_library import LibraryItemCollection
+from .core.search_engine import SearchEngine
 
 @dataclass(frozen=True)
 class Constants:
     pass
 
 @dataclass(frozen=False)
-class DB:
+class General:
     db = VideosDB()
     data = LibraryItemCollection.from_sequences(db.get_all())
+    search_engine = None
 
 @dataclass(frozen=False)
 class Variable:
-    selected_item = tk.IntVar() 
+    selected_item = None 
+    search_entry = None
 
 @dataclass(frozen=False)
 class Widgets:

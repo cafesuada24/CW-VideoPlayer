@@ -42,6 +42,11 @@ class LibraryItem:
     def increment_play_count(self) -> None:
         self.__data['play_count'] += 1 
 
+    def __getitem__(self, item):
+        if item not in self.__data:
+            raise AttributeError(f'invalid attribute: {item}')
+        return self.__data[item]
+
     def __setitem__(self, item, new_val):
         if item not in self.__data:
             raise AttributeError("can't assign new attribue")
@@ -71,3 +76,6 @@ class LibraryItemCollection:
 
     def __iter__(self):
         return iter(self.__videos.values())
+
+    def __contains__(self, id):
+        return id in self.__videos
