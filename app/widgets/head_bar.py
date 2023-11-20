@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 
-from .search_bar import SearchBar
 from ..namespace import Widgets, Variable, General
 
 class HeadBar(ttk.Frame):

@@ -21,7 +21,6 @@ class MainLayout(ttk.Frame):
         _data = []
         for item in General.data:
             _data.extend(((item.get_name().lower(), item.id), (item.get_director().lower(), item.id)))
-        print(_data)
         General.search_engine = SearchEngine(_data)
         
         # Initialize variables
