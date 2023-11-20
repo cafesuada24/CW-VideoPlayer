@@ -26,17 +26,17 @@ class MainFrame(ttk.Frame):
         ttk.Button(
                 self,
                 text='Check Videos',
-                command=lambda: self._root()._display_frame('check_videos')
+                command=lambda: self._root().display_frame('check_videos')
                 ).grid(row=1, column=0)
         ttk.Button(
                 self,
                 text='Create Video List',
-                command=lambda: self._root()._display_frame('create_video_list')
+                command=lambda: self._root().display_frame('create_video_list')
                 ).grid(row=1, column=1)
         ttk.Button(
                 self,
                 text='Update Videos',
-                command=lambda: self._root()._display_frame('update_videos')
+                command=lambda: self._root().display_frame('update_videos')
                 ).grid(row=1, column=2)
 
         for widget in self.winfo_children():
@@ -48,7 +48,7 @@ class MainFrame(ttk.Frame):
 class VideoPlayer(Tk):
     def __init__(self):
         super().__init__()
-        # 
+
         self.__curr_frame = None
         self.__frames = {}
       
@@ -58,21 +58,9 @@ class VideoPlayer(Tk):
         self.rowconfigure(0, weight=1)
         self.resizable(False, False)
         self.__create_widgets()
-        self._display_frame('main')
+        self.display_frame('main')
     
-    @property
-    def se(self):
-        return self.__se
-
-    @property
-    def videos(self):
-        return self.__videos
-    
-    @property
-    def db(self):
-        return self.__db
-    
-    def _display_frame(self, frame):
+    def display_frame(self, frame):
         try:
             frame, kwargs = self.__frames[frame]
             
