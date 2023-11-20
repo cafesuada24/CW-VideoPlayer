@@ -17,6 +17,7 @@ from .widgets import *
 
 @dataclass(frozen=False)
 class Widgets:
+    MAIN_LAYOUT = None
     HEAD_BAR = None
     FOOTER = None
     BROWSER = None

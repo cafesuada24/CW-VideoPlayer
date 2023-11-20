@@ -3,12 +3,11 @@ import traceback
 from tkinter import *
 from tkinter import ttk
 
-from .widgets.check_videos import CheckVideosFrame
-from .widgets.create_video_list import CreateVideoListFrame
-from .widgets.update_videos import UpdateVideosFrame
 from .core.videos_db import VideosDB
 from .core.video_library import LibraryItemCollection
 from .core.search_engine import SearchEngine
+from .widgets import MainLayout
+from .namespace import Widgets
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
@@ -52,15 +51,8 @@ class VideoPlayer(Tk):
         # 
         self.__curr_frame = None
         self.__frames = {}
-        # self.__db = VideosDB()
-        # self.__videos = LibraryItemCollection.from_sequences(self.__db.get_all())
-        # data = []
-        # for video in self.__videos:
-        #     video_info = video.list_all(('name', 'director'))
-        #     video_info = (text.lower() for text in video_info)
-        #     data.extend(zip(video_info, [video.id] * 2))
-        # self.__se = SearchEngine(data)
-        
+      
+        MainLayout(self)
         self.title('Video Player')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -82,7 +74,8 @@ class VideoPlayer(Tk):
     
     def _display_frame(self, frame):
         try:
-            frame = self.__frames[frame]
+            frame, kwargs = self.__frames[frame]
+            
         except KeyError as e:
             print(f'frame not found: {frame}', file=sys.stderr)
             traceback.print_stack(file=sys.stderr)
@@ -90,10 +83,10 @@ class VideoPlayer(Tk):
             if (self.__curr_frame is not None):
                 self.__curr_frame.grid_forget()
             self.__curr_frame = frame
-            self.__curr_frame.display()
+            self.__curr_frame.display(**kwargs)
 
     def __create_widgets(self):
-        self.__frames['main'] = MainFrame(self)
-        self.__frames['check_videos'] = CheckVideosFrame(self)
-        self.__frames['update_videos'] = UpdateVideosFrame(self)
-        self.__frames['create_video_list'] = CreateVideoListFrame(self)
+        self.__frames['main'] = (MainFrame(self), {})
+        self.__frames['check_videos'] = (Widgets.MAIN_LAYOUT, {'rpanel': Widgets.CHECK_VIDEOS_PANEL})
+        self.__frames['update_videos'] = (Widgets.MAIN_LAYOUT, {'rpanel': Widgets.UPDATE_VIDEO_PANEL})
+        self.__frames['create_video_list'] = (Widgets.MAIN_LAYOUT, {'rpanel': Widgets.CREATE_VIDEO_LIST_PANEL})

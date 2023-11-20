@@ -1,66 +1,39 @@
 from tkinter import *
 from tkinter import ttk
 
-from .app_layout import MainLayout 
 from app.core.video_library import LibraryItemCollection
 from ..namespace import Widgets
 from ..events.event_handlers import EventHandler
 from ..events.events import PlaylistButtonClickEvent 
 
-class CreateVideoListFrame(MainLayout):
-    def display(self):
-        super().display(rpanel=Widgets.CREATE_VIDEO_LIST_PANEL)
-    # def _create_widgets(self):
-    #     ttk.Label(
-    #             self,
-    #             text='Playlist'
-    #         ).grid(column=2, row=0, sticky=S)
-    #     ttk.Label(
-    #             self,
-    #             textvariable=self.__info_var
-    #         ).grid(column=2, row=2, sticky=(W, S))
-    #     ttk.Label(
-    #             self,
-    #             text='Enter movie number:'
-    #         ).grid(column=2, row=3, sticky=(W, S))
-    #
-    #     video_entry = ttk.Entry(
-    #             self,
-    #             textvariable=self._video_id,
-    #             validate='key',
-    #             validatecommand=self._number_input_validate
-    #         )
-    #     video_entry.grid(row=4, column=2, sticky=(N, W, E, S))
-    #     video_entry.focus()
-    #
-    #     self.__rm_pl_btn = ttk.Button(
-    #             self,
-    #             text='Remove from playlist'
-    #         )
-    #     self.__rm_pl_btn.grid(row=5, column=2, sticky=(N, W, E, S))
-    #     self.__add_pl_btn = ttk.Button(
-    #             self,
-    #             text='Add to playlist'
-    #         )       
-    #     self.__add_pl_btn.grid(row=6, column=2, sticky=(N, W, E, S))
-    #     self.__play_pl_btn = ttk.Button(
-    #             self,
-    #             text='Play the playlist'
-    #         )
-    #     self.__play_pl_btn.grid(row=8, column=2, sticky=(N, W, E, S))
-    #
-    # def _bind_events(self):
-    #     event = PlaylistButtonClickEvent(self)
-    #     self.__add_pl_btn.bind('<Button-1>', EventHandler.add_to_playlist(event))
-    #     self.__rm_pl_btn.bind('<Button-1>', EventHandler.remove_from_playlist(event))
-    #     self.__play_pl_btn.bind('<Button-1>', EventHandler.play_playlist(event))
-    #
-    # def _update_texts(self, status, text_info):
-    #     self.__info_var.set(text_info)
-    #
-    #     if not status: return
-    #
-    #     playlist = '\n'.join(video.get_name() for video in self._curr_playlist)
-    #     self._display_info(playlist)
+class CreateVideoListPanel(ttk.Frame):
+    def __init__(self, root):
+        super().__init__(root)
+        
+        self.columnconfigure(0, weight=2)
+        self.columnconfigure(1, weight=3)
 
+        ttk.Label(self, text='Create Video List').grid(row=0, column=0, columnspan=2)
+        ttk.Separator(self, orient='horizontal').grid(row=1, column=0, columnspan=2, sticky=NSEW)
+        
+        var = Variable()
+        self.__list = Listbox(self, width=50)
+        self.__list.grid(row=2, column=0, columnspan=2)
 
+        attrs = ('Number', 'Name')
+        for row, attr in zip(range(3, len(attrs) * 2 + 3, 2), attrs):
+            ttk.Label(self, text=attr).grid(row=row, column=0, sticky=W)
+            input = ttk.Entry(self)
+            input.grid(row=row, column=1, ipady=3, sticky=NSEW)
+            ttk.Separator(self, orient='horizontal').grid(column=0, columnspan=2, sticky=NSEW)
+        
+        self.__add_btn = ttk.Button(self, text='Add', width=20)
+        self.__remove_btn = ttk.Button(self, text='Remove', width=20)
+        self.__play_btn = ttk.Button(self, text='Play playlist')
+        
+        self.__add_btn.grid(column=0, row=7, columnspan=2, sticky=W)
+        self.__remove_btn.grid(column=1, row=7, sticky=E)
+        self.__play_btn.grid(column=0, columnspan=2, sticky=(W, E))
+
+        for children in self.winfo_children():
+            children.grid(padx=5, pady=5)

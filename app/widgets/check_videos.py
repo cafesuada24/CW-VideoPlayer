@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 
-from . import MainLayout
 from .. import CONFIG
 from ..namespace import Widgets
 from ..events.event_handlers import EventHandler
@@ -10,40 +9,24 @@ from ..events.events import CheckButtonClickEvent
 
 CONFIG = CONFIG['display']['columns']
 
-class CheckVideosFrame(MainLayout):
-    def display(self):
-        super().display(rpanel=Widgets.CHECK_VIDEOS_PANEL)
+class CheckVideosPanel(ttk.Frame):    
+    def __init__(self, root):
+        super().__init__(root)
 
-    # def _create_widgets(self):
-    #     ttk.Label(
-    #             self,
-    #             text='Movie Information'
-    #         ).grid(column=2, row=0, sticky=S)
-    #     ttk.Label(
-    #             self,
-    #             text='Enter video number:'
-    #         ).grid(column=2, row=6, sticky=(W, S))
-    #    
-    #     video_entry = ttk.Entry(
-    #             self,
-    #             textvariable=self._video_id,
-    #             validate='key',
-    #             validatecommand=self._number_input_validate
-    #         )
-    #     video_entry.grid(row=7, column=2, sticky=(N, W, E, S))
-    #     video_entry.focus()
-    #     
-    #     self.__check_btn = ttk.Button(
-    #             self,
-    #             text='Check Video',
-    #             width=20,
-    #         )
-    #     self.__check_btn.grid(row=8, column=2, sticky=(N, W, E, S))
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, weight=2)
 
-    # def _bind_events(self):
-    #     self.__check_btn.bind(
-    #         '<Button-1>',
-    #         EventHandler.check_video(CheckButtonClickEvent(self))
-    #     )
+        ttk.Label(self, text='Video Infomation').grid(row=0, column=0, columnspan=2, sticky=(N, S))
+        ttk.Separator(self, orient='horizontal').grid(row=1, column=0, columnspan=2, sticky=NSEW)
 
+        attrs = ('Number', 'Name', 'Director', 'Play count', 'File path')
+        for row, attr in zip(range(2, len(attrs) * 2 + 2, 2), attrs):
+            ttk.Label(self, text=attr).grid(row=row, column=0, sticky=W)
+            Text(self, height=1, width=50).grid(row=row, column=1, ipady=3, sticky=(W, E))
+            ttk.Separator(self, orient='horizontal').grid(row=row+1, column=0, columnspan=2, sticky=NSEW)
 
+        self.__check_btn = ttk.Button(self, text='Check Videos', width=25)
+        self.__check_btn.grid(column=1, sticky=(E, N, S))
+
+        for children in self.winfo_children():
+            children.grid(padx=7, pady=7)
