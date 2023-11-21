@@ -7,7 +7,7 @@ from .core.videos_db import VideosDB
 from .core.video_library import LibraryItemCollection
 from .core.search_engine import SearchEngine
 from .widgets import MainLayout
-from .namespace import Widgets
+from .namespace import Widgets, init_namespaces
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
@@ -48,6 +48,7 @@ class MainFrame(ttk.Frame):
 class VideoPlayer(Tk):
     def __init__(self):
         super().__init__()
+        init_namespaces() 
 
         self.__curr_frame = None
         self.__frames = {}
