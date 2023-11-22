@@ -2,6 +2,7 @@ import sqlite3 as sql
 from collections import deque
 from pathlib import Path
 from typing import NamedTuple
+import atexit
 
 from .. import CONFIG
 
@@ -12,7 +13,8 @@ class VideosDB:
         self.__db_file = CONFIG['path']['db']
         self.__transactions = deque() 
         self.__se = None
-        self.__data = tuple
+        self.__data = tuple()
+        atexit.register(self.__push_transactions)
 
     def update(self, id: int, column: str, val: str | int) -> None:
         transaction = UpdateTransaction(id, column, val)
@@ -61,9 +63,6 @@ class VideosDB:
         self.__cursor.close()
         self.__conn.close()
     
-    def __del__(self):
-       self.__push_transactions() 
-
 class UpdateTransaction(NamedTuple):
     id: int
     column: str

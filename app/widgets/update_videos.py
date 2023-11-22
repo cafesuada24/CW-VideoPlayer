@@ -27,7 +27,7 @@ class UpdateVideoPanel(ttk.Frame):
             input.grid(row=row, column=1, ipady=3, sticky=E)
             self.__inputs.append(input)
             ttk.Separator(self, orient='horizontal').grid(row=row+1, column=0, columnspan=2, sticky=NSEW)
-        button = ttk.Button(self, text='Update', width=20)
+        button = ttk.Button(self, text='Update', width=20, command=self.update_video)
         button.grid(row=10, column=1, sticky=E)
 
         for children in self.winfo_children():
@@ -42,4 +42,26 @@ class UpdateVideoPanel(ttk.Frame):
                 self.__vars[idx+1].set(data[idx])
         except Exception as e:
             print(e)
+
+    def update_video(self):
+        try:
+            id = Variable.selected_item.get()
+            name, director, path = self.__inputs[1:]
+            name = name.get()
+            director = director.get()
+            path = path.get()
+            origin = General.data[id]
+            if name != origin.get_name():
+                origin['name'] = name
+                General.db.update(id, 'name', name)
+            if director != origin.get_director():
+                origin['director'] = director
+                General.db.update(id, 'director', director)
+            if path != origin.get_file_path():
+                origin['file_path'] = path
+                General.db.update(id, 'file_path', path)
+        except Exception as e:
+            print(e)
+            pass
+
             
