@@ -2,7 +2,7 @@ from collections.abc import Sequence
 from tkinter import *
 from tkinter import ttk
 
-from ..namespace import Variable
+from ..namespaces.tk_variable import TkVariable
 
 class VideoBrowser(ttk.Frame):
     def __init__(self, *args, **kwargs):

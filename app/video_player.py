@@ -5,9 +5,8 @@ from tkinter import ttk
 
 from .core.videos_db import VideosDB
 from .core.video_library import LibraryItemCollection
-from .core.search_engine import SearchEngine
-from .widgets import MainLayout
-from .namespace import Widgets, init_namespaces
+from .namespaces import Widgets
+from .widgets.app_layout import MainLayout
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
@@ -48,12 +47,14 @@ class MainFrame(ttk.Frame):
 class VideoPlayer(Tk):
     def __init__(self):
         super().__init__()
-        init_namespaces() 
 
         self.__curr_frame = None
         self.__frames = {}
+        self.__main_layout = MainLayout(self)
+        
+        # Init widgets namespace
+        Widgets(self.__main_layout)
       
-        MainLayout(self)
         self.title('Video Player')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
@@ -76,6 +77,6 @@ class VideoPlayer(Tk):
 
     def __create_widgets(self):
         self.__frames['main'] = (MainFrame(self), {})
-        self.__frames['check_videos'] = (Widgets.MAIN_LAYOUT, {'rpanel': Widgets.CHECK_VIDEOS_PANEL})
-        self.__frames['update_videos'] = (Widgets.MAIN_LAYOUT, {'rpanel': Widgets.UPDATE_VIDEO_PANEL})
-        self.__frames['create_video_list'] = (Widgets.MAIN_LAYOUT, {'rpanel': Widgets.CREATE_VIDEO_LIST_PANEL})
+        self.__frames['check_videos'] = (self.__main_layout, {'rpanel': Widgets().CHECK_VIDEOS_PANEL})
+        self.__frames['update_videos'] = (self.__main_layout, {'rpanel': Widgets().UPDATE_VIDEO_PANEL})
+        self.__frames['create_video_list'] = (self.__main_layout, {'rpanel': Widgets().CREATE_VIDEO_LIST_PANEL})
