@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS videos;
+DROP TABLE IF EXISTS playlist;
+DROP TABLE IF EXISTS playlist_video;
 
 CREATE TABLE videos (
   video_id   INTEGER      PRIMARY KEY,
@@ -9,26 +11,52 @@ CREATE TABLE videos (
   file_name  VARCHAR(255) NOT NULL UNIQUE
 );
 
+CREATE TABLE playlist (
+  playlist_id INTEGER      PRIMARY KEY,
+  name        VARCHAR(255) NOT NULL
+); 
+
+CREATE TABLE playlist_video (
+  video_id    INTEGER NOT NULL,
+  playlist_id INTEGER NOT NULL,
+  FOREIGN KEY (video_id)
+  REFERENCES videos (video_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (playlist_id)
+  REFERENCES playlist (playlist_id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
+);
+
 INSERT INTO videos (name, director, rating, file_name) 
-VALUES (
+VALUES
+(
   'Ambient Nature Atmostphere',
   'Ambient Nature',
   3,
   'ambient_nature.mp4'
-);
-
-INSERT INTO videos (name, director, rating, file_name)
-VALUES (
+),
+(
   'Love',
   'Peggy Anke',
   2,
   'love.mp4'
-);
-
-INSERT INTO videos (name, director, rating, file_name)
-VALUES (
+),
+(
   'Short Video 3',
   'Codix Damiyen',
   4,
   'short_video_3.mp4'
 );
+
+INSERT INTO playlist (name)
+VALUES (
+  'all'
+);
+
+INSERT INTO playlist_video (video_id, playlist_id)
+VALUES
+(1, 1),
+(2, 1),
+(3, 1);
