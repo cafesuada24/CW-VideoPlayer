@@ -12,42 +12,7 @@ from .widgets.head_bar import HeadBar
 from .widgets.check_videos import CheckVideosPanel
 from .widgets.create_video_list import CreateVideoListPanel
 from .widgets.update_videos import UpdateVideoPanel
-
-
-class MainFrame(ttk.Frame):
-    def __init__(self, root):
-        super().__init__(root)
-
-        for column in range(3):
-            self.columnconfigure(column, weight=1)
-
-        self.__create_widgets()
-
-    def __create_widgets(self):
-        ttk.Label(
-            self, text='Select an option by clicking one of the buttons below'
-        ).grid(row=0, column=0, columnspan=3)
-        ttk.Button(
-            self,
-            text='Check Videos',
-            command=lambda: self._root().display_frame('check_videos'),
-        ).grid(row=1, column=0)
-        ttk.Button(
-            self,
-            text='Create Video List',
-            command=lambda: self._root().display_frame('create_video_list'),
-        ).grid(row=1, column=1)
-        ttk.Button(
-            self,
-            text='Update Videos',
-            command=lambda: self._root().display_frame('update_videos'),
-        ).grid(row=1, column=2)
-
-        for widget in self.winfo_children():
-            widget.grid(padx=5, pady=5, sticky='we')
-
-    def display(self):
-        self.grid(row=0, column=0, sticky='nsew')
+from .widgets.menu import Menu
 
 
 class VideoPlayer(tk.Tk):
@@ -64,7 +29,7 @@ class VideoPlayer(tk.Tk):
         self.rowconfigure(0, weight=1)
         self.resizable(False, False)
         self.__create_widgets()
-        self.display_frame('main')
+        self.display_frame('menu')
 
     def display_frame(self, frame):
         try:
@@ -81,6 +46,7 @@ class VideoPlayer(tk.Tk):
 
     def __create_widgets(self):
         self.__main_layout = MainLayout(self)
+        Menu(self)
         VideoBrowser(self.__main_layout)
         HeadBar(self.__main_layout)
         Footer(self.__main_layout)
@@ -88,7 +54,7 @@ class VideoPlayer(tk.Tk):
         UpdateVideoPanel(self.__main_layout)
         CreateVideoListPanel(self.__main_layout)
 
-        self.__frames['main'] = (MainFrame(self), {})
+        self.__frames['menu'] = (Menu(), {})
         self.__frames['check_videos'] = (
             self.__main_layout,
             {'rpanel': CheckVideosPanel()},

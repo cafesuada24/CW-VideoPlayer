@@ -17,4 +17,4 @@ class Footer(ttk.Frame, metaclass=SingletonMeta):
         self.__back_btn.grid(row=0, column=0, sticky='w')
 
     def __back(self):
-        self._root().display_frame('main')
+        self._root().display_frame('menu')
