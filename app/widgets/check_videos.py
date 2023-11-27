@@ -1,55 +1,62 @@
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
-from tkinter import messagebox as msgbox
 from collections.abc import Sequence
 
-from .. import CONFIG
+from ..singleton import SingletonMeta
 from ..namespaces.tk_variable import TkVariable
 from ..namespaces.event_handlers import EventHandlers
+from ..core.video_library import LibraryItem
+from .abstracts import AppFrame, InfoText
 
-CONFIG = CONFIG['display']['columns']
 
-class CheckVideosPanel(ttk.Frame):    
+class CheckVideosPanel(AppFrame, metaclass=SingletonMeta):
+    HEADINGS = LibraryItem.HEADINGS[1:]
+
     def __init__(self, root):
         super().__init__(root)
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=2)
 
-        ttk.Label(self, text='Video Infomation').grid(row=0, column=0, columnspan=2, sticky=(N, S))
-        ttk.Separator(self, orient='horizontal').grid(row=1, column=0, columnspan=2, sticky=NSEW)
-
-        attrs = ('Name', 'Director', 'Rating', 'Play count', 'File path')
-        self.__info_text = []
-        
-        ttk.Label(self, text='ID').grid(row=2, column=0, sticky=W)
-        self.__id_input = ttk.Entry(self, textvariable=TkVariable().selected_id)
-        self.__id_input.grid(row=2, column=1, ipady=3, sticky=(W, E))
-        ttk.Separator(self, orient='horizontal').grid(row=3, column=0, columnspan=2, sticky=NSEW)
-
-        for row, attr in zip(range(4, len(attrs) * 2 + 2, 2), attrs):
-            ttk.Label(self, text=attr).grid(row=row, column=0, sticky=W)
-            textbox = Text(self, height=1, width=35)
-            textbox['state'] = 'disabled'
-            textbox.grid(row=row, column=1, ipady=3, sticky=(W, E))
-            self.__info_text.append(textbox)
-            ttk.Separator(self, orient='horizontal').grid(row=row+1, column=0, columnspan=2, sticky=NSEW)
-        
-        self.__check_btn = ttk.Button(self, text='Check Videos', width=20, command=EventHandlers.show_info)
+    def _create_widgets(self):
+        self.__texts = tuple(
+            InfoText(self)
+            for _ in range(len(self.HEADINGS))
+        )
+        self.__id_input = ttk.Entry(
+            self, textvariable=TkVariable().selected_id
+        )
+        self.__check_btn = ttk.Button(
+            self, text='Check Videos', width=20, command=self.__display_info
+        )
         self.__play_btn = ttk.Button(self, text='Play', width=20)
-        self.__play_btn.grid(row=13, column=0, columnspan=2, sticky=(W, N, S))
-        self.__check_btn.grid(row=13, column=1, sticky=(E, N, S))
 
-        for children in self.winfo_children():
-            children.grid(padx=7, pady=7)
-    
-    def display_info(self, data: Sequence):
-        for field, attr in zip(self.__info_text, data):
-            field['state'] = 'normal'
-            field.delete('1.0', END)
-            field.insert('1.0', attr)
-            field['state'] = 'disabled'
+    def _display_widgets(self):
+        ttk.Label(self, text='Video Infomation').grid(
+            row=0, column=0, columnspan=2, sticky='ns'
+        )
+        ttk.Label(self, text=LibraryItem.HEADINGS[0]).grid(
+            row=2, column=0, sticky='w'
+        )
+        self.__id_input.grid(row=2, column=1, ipady=3, sticky='we')
+        self.__play_btn.grid(row=14, column=0, columnspan=2, sticky='wns')
+        self.__check_btn.grid(row=14, column=1, sticky='ens')
 
-    
+        for row in range(1, 14, 2):
+            ttk.Separator(self, orient='horizontal').grid(
+                row=row, column=0, columnspan=2, sticky='nsew'
+            )
 
-                            
+        for row, attr, text in zip(
+            range(4, 13, 2), self.HEADINGS, self.__texts
+        ):
+            ttk.Label(self, text=attr).grid(row=row, column=0, sticky='w')
+            text.grid(row=row, column=1, ipady=3, sticky='we')
+
+    def __display_info(self):
+        data = EventHandlers.get_video_info()
+        if not data:
+            return
+
+        for text, value in zip(self.__texts, data):
+            text.display(value)

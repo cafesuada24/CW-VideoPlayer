@@ -2,24 +2,37 @@ import sqlite3 as sql
 from collections import deque
 from pathlib import Path
 from typing import NamedTuple
-import atexit
+
+from ..singleton import SingletonMeta
 
 from .. import CONFIG
 
 CONFIG = CONFIG['database']
 
-class VideosDB:
+
+class VideosDB(metaclass=SingletonMeta):
     def __init__(self):
-        self.__db_file = CONFIG['path']['db']
-        self.__transactions = deque() 
-        self.__se = None
-        self.__data = tuple()
-        atexit.register(self.__push_transactions)
+        # self.__db_file = CONFIG['path']['db']
+        # self.__transactions = deque()
+        # self.__se = None
+        # self.__data = tuple()
+        self.__conn = sql.connect(CONFIG['path']['db'])
+        self.__cursor = self.__conn.cursor()
+        self.__ensure_db()
+
+    @property
+    def cursor(self):
+        return self.__cursor
+
+    def close(self):
+        self.__conn.commit()
+        self.__cursor.close()
+        self.__conn.close()
 
     def update(self, id: int, column: str, val: str | int) -> None:
         transaction = UpdateTransaction(id, column, val)
         self.__transactions.append(transaction)
-    
+
     def get_all(self):
         query = f"SELECT * FROM {CONFIG['table']}"
         with self:
@@ -28,8 +41,9 @@ class VideosDB:
         return tuple(ret)
 
     def __push_transactions(self):
-        if not self.__transactions: return
-        
+        if not self.__transactions:
+            return
+
         with self as cursor:
             while self.__transactions:
                 tsx = self.__transactions.popleft()
@@ -40,10 +54,13 @@ class VideosDB:
                 '''
                 cursor.execute(query, (tsx.value, tsx.id))
 
-    def __ensure_table(self):
-        if self.__cursor is None: return
-        
-        query = "SELECT name FROM sqlite_master WHERE type='table' AND name = ?"
+    def __ensure_db(self):
+        if self.__cursor is None:
+            return
+
+        query = (
+            "SELECT name FROM sqlite_master WHERE type='table' AND name = ?"
+        )
         self.__cursor.execute(query, (CONFIG['table'],))
 
         if self.__cursor.fetchone() is not None:
@@ -62,8 +79,9 @@ class VideosDB:
         self.__conn.commit()
         self.__cursor.close()
         self.__conn.close()
-    
-class UpdateTransaction(NamedTuple):
-    id: int
-    column: str
-    value: str | int
+
+
+# class UpdateTransaction(NamedTuple):
+#     id: int
+#     column: str
+#     value: str | int

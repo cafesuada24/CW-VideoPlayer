@@ -1,57 +1,78 @@
-# from . import Variable, Widgets
+# from .widgets import Widgets
+import tkinter as tk
+from .tk_variable import TkVariable
+from .general import General
+from ..core.video_library import LibraryItem
+
 
 class EventHandlers:
     @staticmethod
-    def update_brower_items():
-        # _prefix = Variable.search_entry.get().strip().lower()
-        # _ids = General.search_engine.search_prefix(_prefix)
-        # _data = [General.data[id] for id in _ids] 
-        # d = {'id': 'video_id', 'author': 'director', 'name': 'name', 'rating': 'rating'}
-        # sort_by = self.__sort_by_var.get().strip().lower()
-        # sort_order = self.__sort_order_var.get().strip().lower()
-        # _data.sort(key=lambda val: val[d[sort_by]], reverse=sort_order=='descending')
-        # Widgets.BROWSER.display_items(_data)
-        pass
+    def get_brower_items():
+        _prefix = TkVariable().get_search_entry()
+        _data = General().search_engine.search_prefix(_prefix)
+        _data = (General().data[id] for id in _data)
+        d = {
+            'id': 'video_id',
+            'author': 'director',
+            'name': 'name',
+            'rating': 'rating',
+        }
+        sort_by = TkVariable().get_sort_by()
+        sort_order = TkVariable().get_sort_order()
+        return sorted(
+            _data, key=lambda val: val[d[sort_by]], reverse=sort_order
+        )
 
     @staticmethod
-    def show_info(self, *ignore):
-        # try:
-        #     id = Variable.selected_item.get()
-        #     data = General.data[id]
-        #     self.display_info(data.list_all(('name', 'director', 'rating', 'play_count', 'file_path')))
-        # except:
-        #     msgbox.showerror('Id error', message='Invalid ID')
-        pass
+    def get_video_info():
+        id = TkVariable().get_selected_id()
+        if not id:
+            return None
+        data = General().data[id]
+        return data.list_all(LibraryItem.COLUMNS[1:])
 
     @staticmethod
-    def add_selected(self):
+    def add_selected_to_playlist():
+        id = TkVariable().get_selected_id()
+        if not id or id in General().play_list:
+            return False
+        item = General().data[id]
+        General().play_list.add(item)
+        return True
+
+    @staticmethod
+    def remove_selected_from_playlist():
+        id = TkVariable().get_selected_id()
+        if not id or id not in General().play_list:
+            return False
+        General().play_list.remove(id)
+        return True
+
+    @staticmethod
+    def play_playlist():
+        if not General().play_list:
+            return False
+        General().play_list.play() 
+        return True
+
+    @staticmethod
+    def update_video(self):
         try:
             id = Variable.selected_item.get()
-            if id not in Variable.current_playlist:
-                Variable.current_playlist[id] = General.data[id]
+            name, director, path = self.__inputs[1:]
+            name = name.get()
+            director = director.get()
+            path = path.get()
+            origin = General().data[id]
+            if name != origin.get_name():
+                origin['name'] = name
+                General().db.update(id, 'name', name)
+            if director != origin.get_director():
+                origin['director'] = director
+                General().db.update(id, 'director', director)
+            if path != origin.get_file_path():
+                origin['file_path'] = path
+                General().db.update(id, 'file_path', path)
         except Exception as e:
             print(e)
-            msgbox.showerror('Invalid ID', message='Invalid ID')
-        self.display_playlist(Variable.current_playlist)
-    
-    @staticmethod
-    def remove_selected(self):
-        try:
-            id = Variable.selected_item.get()
-            del Variable.current_playlist[id]
-        except Exception as e:
-            print(e)
-            msgbox.showerror('Invaid Id', message='Invalid ID')
-        self.display_playlist(Variable.current_playlist)
-    
-    @staticmethod
-    def play_playlist(self):
-        if not Variable.current_playlist:
-            msgbox.showerror('Playlist error', message='No video to play!')
-            return
-
-        for item in Variable.current_playlist.values():
-            item.increment_play_count()
-            General.db.update(item.id, 'play_count', item.get_play_count())
-        msgbox.showinfo('Playing...', message='Played')
-
+            pass

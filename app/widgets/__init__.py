@@ -5,4 +5,3 @@
 #
 # __all__ = ('MainLayout', 'CheckVideosFrame', 'CreateVideoListFrame', 'UpdateVideosFrame')
 #
-
