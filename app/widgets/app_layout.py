@@ -40,7 +40,6 @@ class MainLayout(AppFrame, metaclass=SingletonMeta):
         ):
             children.grid(padx=5, pady=5)
         pass
-    
 
     def display(self, head_bar=None, browser=None, rpanel=None, footer=None):
         if self._head_bar:

@@ -4,6 +4,7 @@ from tkinter import ttk
 from ..singleton import SingletonMeta
 from .abstracts import AppFrame
 
+
 class Menu(AppFrame, metaclass=SingletonMeta):
     def __init__(self, root):
         super().__init__(root)
@@ -13,7 +14,7 @@ class Menu(AppFrame, metaclass=SingletonMeta):
 
     def _create_widgets(self):
         pass
-    
+
     def _display_widgets(self):
         ttk.Label(
             self, text='Select an option by clicking one of the buttons below'
@@ -39,4 +40,3 @@ class Menu(AppFrame, metaclass=SingletonMeta):
 
     def display(self):
         self.grid(row=0, column=0, sticky='nsew')
-

@@ -52,7 +52,7 @@ class EventHandlers:
     def play_playlist():
         if not General().play_list:
             return False
-        General().play_list.play() 
+        General().play_list.play()
         return True
 
     @staticmethod

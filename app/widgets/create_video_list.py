@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox as msgbox
 
 from ..singleton import SingletonMeta
-from app.core.video_library import LibraryItemCollection, LibraryItem
+from ..core.video_library import LibraryItemCollection, LibraryItem
 from ..namespaces.event_handlers import EventHandlers
 from ..namespaces.tk_variable import TkVariable
 from ..namespaces.general import General
@@ -25,20 +25,22 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
         self.__id_entry = ttk.Entry(
             self, textvariable=TkVariable().selected_id
         )
-        self.__texts = tuple(
-            InfoText(self) for _ in range(len(self.__attrs))
-        )
+        self.__texts = tuple(InfoText(self) for _ in range(len(self.__attrs)))
         self.__add_btn = ttk.Button(
             self,
             text='Add',
             width=20,
-            command=self.display_playlist(EventHandlers().add_selected_to_playlist),
+            command=self.display_playlist(
+                EventHandlers().add_selected_to_playlist
+            ),
         )
         self.__remove_btn = ttk.Button(
             self,
             text='Remove',
             width=20,
-            command=self.display_playlist(EventHandlers().remove_selected_from_playlist),
+            command=self.display_playlist(
+                EventHandlers().remove_selected_from_playlist
+            ),
         )
         self.__play_btn = ttk.Button(
             self,
@@ -75,7 +77,6 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
         ):
             text.display(value)
 
-
     def display_playlist(self, call_back):
         def __wrapper():
             succ = call_back()
@@ -84,7 +85,10 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
             self.__playlist.delete(0, tk.END)
             self.__playlist.insert(
                 tk.END,
-                *(f'{item.get_id()} - {item.get_name()}' for item in General().play_list),
+                *(
+                    f'{item.get_id()} - {item.get_name()}'
+                    for item in General().play_list
+                ),
             )
 
         return __wrapper

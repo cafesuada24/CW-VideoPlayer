@@ -19,10 +19,7 @@ class CheckVideosPanel(AppFrame, metaclass=SingletonMeta):
         self.columnconfigure(1, weight=2)
 
     def _create_widgets(self):
-        self.__texts = tuple(
-            InfoText(self)
-            for _ in range(len(self.HEADINGS))
-        )
+        self.__texts = tuple(InfoText(self) for _ in range(len(self.HEADINGS)))
         self.__id_input = ttk.Entry(
             self, textvariable=TkVariable().selected_id
         )
