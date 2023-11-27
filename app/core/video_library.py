@@ -73,14 +73,14 @@ class LibraryItem:
     def play(self):
         self.increment_play_count()
 
-    def __getitem__(self, item: str) -> str | int:
+    def __getitem__(self, item: str | int) -> str | int:
         if isinstance(item, int):
             item = self.COLUMNS[item]
         if item not in self.__data:
             raise AttributeError(f'invalid attribute: {item}')
         return self.__data[item]
 
-    def __setitem__(self, item: str, new_val: str | int) -> None:
+    def __setitem__(self, item: str | int, new_val: str | int) -> None:
         if isinstance(item, int):
             item = self.COLUMNS[item]
         if item not in self.__data:
@@ -111,7 +111,7 @@ class LibraryItemCollection:
 
     def play(self):
         for item in self:
-            item.increment_play_count()
+            item.play()
 
     def __getitem__(self, video_id) -> LibraryItem:
         return self.__videos[video_id]

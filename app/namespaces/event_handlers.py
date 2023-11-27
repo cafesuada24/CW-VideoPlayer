@@ -1,5 +1,8 @@
 # from .widgets import Widgets
 import tkinter as tk
+from tkinter import messagebox as msgbox
+from collections.abc import Sequence
+
 from .tk_variable import TkVariable
 from .general import General
 from ..core.video_library import LibraryItem
@@ -7,7 +10,7 @@ from ..core.video_library import LibraryItem
 
 class EventHandlers:
     @staticmethod
-    def get_brower_items():
+    def get_brower_items() -> None:
         _prefix = TkVariable().get_search_entry()
         _data = General().search_engine.search_prefix(_prefix)
         _data = (General().data[id] for id in _data)
@@ -24,55 +27,71 @@ class EventHandlers:
         )
 
     @staticmethod
-    def get_video_info():
+    def play_video() -> LibraryItem:
+        id = TkVariable().get_selected_id()
+        if not id:
+            return
+        General().data[id].play()
+
+    @staticmethod
+    def get_video() -> LibraryItem:
         id = TkVariable().get_selected_id()
         if not id:
             return None
-        data = General().data[id]
-        return data.list_all(LibraryItem.COLUMNS[1:])
+        return General().data[id]
 
     @staticmethod
-    def add_selected_to_playlist():
+    def add_selected_to_playlist() -> bool:
         id = TkVariable().get_selected_id()
-        if not id or id in General().play_list:
+        if not id:
+            return False
+        if id in General().play_list:
+            msgbox.showerror('Add error', 'Already added!')            
             return False
         item = General().data[id]
         General().play_list.add(item)
         return True
 
     @staticmethod
-    def remove_selected_from_playlist():
+    def remove_selected_from_playlist() -> bool:
         id = TkVariable().get_selected_id()
-        if not id or id not in General().play_list:
+        if not id:
+            return False
+        if id not in General().play_list:
+            msgbox.showerror('Remove error', 'Seleted item is not in playlist!')
             return False
         General().play_list.remove(id)
         return True
 
     @staticmethod
-    def play_playlist():
+    def play_playlist() -> bool:
         if not General().play_list:
+            msgbox.showerror('Play error', 'Cannot play an empty playlist!')
             return False
         General().play_list.play()
         return True
 
     @staticmethod
-    def update_video(self):
+    def update_video(new_values: Sequence[tk.Entry]):
+        id = TkVariable().get_selected_id()
+        if not id:
+            return
         try:
-            id = Variable.selected_item.get()
-            name, director, path = self.__inputs[1:]
-            name = name.get()
-            director = director.get()
-            path = path.get()
-            origin = General().data[id]
-            if name != origin.get_name():
-                origin['name'] = name
-                General().db.update(id, 'name', name)
-            if director != origin.get_director():
-                origin['director'] = director
-                General().db.update(id, 'director', director)
-            if path != origin.get_file_path():
-                origin['file_path'] = path
-                General().db.update(id, 'file_path', path)
-        except Exception as e:
-            print(e)
-            pass
+            new_values = tuple(item.get() for item in new_values)
+        except tk._tkinter.TclError as e:
+            msgbox.showinfo('Update error', e)
+            return
+        item = General().data[id]
+        if all(val == item[index] for index, val in enumerate(new_values)):
+            msgbox.showinfo('Update', 'Nothing to update!')
+            return
+        if any(not val for val in new_values if isinstance(val, str)):
+            msgbox.showerror('Update error', 'Entry cannot be empty!')
+            return
+
+        for index, new_val in enumerate(new_values):
+            if index == 0:
+                continue
+            if new_val != item[index]:
+                print(new_val)
+                item[index] = new_val

@@ -11,6 +11,9 @@ from .abstracts import AppFrame, InfoText
 
 
 class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
+    COLUMNS = (1,)
+    HEADINGS = tuple(LibraryItem.HEADINGS[col] for col in COLUMNS)
+
     def __init__(self, root):
         super().__init__(root)
 
@@ -20,12 +23,11 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
         self.columnconfigure(1, weight=3)
 
     def _create_widgets(self):
-        self.__attrs = LibraryItem.HEADINGS[1:2]
         self.__playlist = tk.Listbox(self, width=50)
         self.__id_entry = ttk.Entry(
             self, textvariable=TkVariable().selected_id
         )
-        self.__texts = tuple(InfoText(self) for _ in range(len(self.__attrs)))
+        self.__texts = tuple(InfoText(self) for _ in range(len(self.HEADINGS)))
         self.__add_btn = ttk.Button(
             self,
             text='Add',
@@ -53,14 +55,16 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
             row=0, column=0, columnspan=2
         )
         ttk.Label(self, text='ID').grid(row=4, column=0, sticky='w')
-        for row in range(1, 8, 2):
+        for idx in range(0, 3 + len(self.COLUMNS)):
+            row = 2 * idx + 1 
             ttk.Separator(self, orient='horizontal').grid(
                 row=row, column=0, columnspan=2, sticky='nsew'
             )
         self.__playlist.grid(row=2, column=0, columnspan=2)
         self.__id_entry.grid(row=4, column=1, ipady=3, sticky='nsew')
-
-        for row, attr, text in zip(range(6, 7, 2), self.__attrs, self.__texts):
+        
+        for idx, (attr, text) in enumerate(zip(self.HEADINGS, self.__texts)):
+            row = 2 * (idx + 3)
             ttk.Label(self, text=attr).grid(row=row, column=0, sticky='w')
             text.grid(row=row, column=1, ipady=3, sticky='nsew')
 
@@ -71,17 +75,21 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
     def __display_name(self, *ignore):
         id = TkVariable().get_selected_id(display_msg=False)
         if not id:
+            for text in self.__texts:
+                text.display('')
             return
-        for text, value in zip(
-            self.__texts, General().data[id].list_all(('name',))
+        data = General().data[id]
+        for idx, col in enumerate(
+            self.COLUMNS
         ):
-            text.display(value)
+            self.__texts[idx].display(data[col])
 
     def display_playlist(self, call_back):
         def __wrapper():
             succ = call_back()
             if not succ:
                 return
+
             self.__playlist.delete(0, tk.END)
             self.__playlist.insert(
                 tk.END,

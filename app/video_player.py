@@ -22,8 +22,6 @@ class VideoPlayer(tk.Tk):
         self.__curr_frame = None
         self.__frames = {}
 
-        # Init widgets namespace
-
         self.title('Video Player')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
