@@ -26,14 +26,19 @@ class UpdateVideoPanel(AppFrame, metaclass=SingletonMeta):
             tk.StringVar(),
             tk.StringVar(),
             tk.DoubleVar(),
-            tk.StringVar()
+            tk.StringVar(),
         )
-        self.__id_input = ttk.Entry(self, width=35, textvariable=TkVariable().selected_id)
+        self.__id_input = ttk.Entry(
+            self, width=35, textvariable=TkVariable().selected_id
+        )
         self.__entries = tuple(
             ttk.Entry(self, width=35, textvariable=var) for var in self.__vars
         )
         self.__update_btn = ttk.Button(
-            self, text='Update', width=20, command=lambda: EventHandlers().update_video(self.__vars)
+            self,
+            text='Update',
+            width=20,
+            command=lambda: EventHandlers().update_video(self.__vars),
         )
 
     def _display_widgets(self):
@@ -42,17 +47,17 @@ class UpdateVideoPanel(AppFrame, metaclass=SingletonMeta):
         )
         ttk.Label(self, text='ID').grid(row=2, column=0, sticky='w')
         for idx in range(0, 2 + len(self.COLUMNS)):
-            row = idx * 2 + 1 
+            row = idx * 2 + 1
             ttk.Separator(self, orient='horizontal').grid(
                 row=row, column=0, columnspan=2, sticky='nsew'
             )
-        for idx, (attr, entry) in enumerate(zip(
-            self.HEADINGS, self.__entries
-        )):
+        for idx, (attr, entry) in enumerate(
+            zip(self.HEADINGS, self.__entries)
+        ):
             row = 2 * (idx + 2)
             ttk.Label(self, text=attr).grid(row=row, column=0, sticky='w')
             entry.grid(row=row, column=1, ipady=3, sticky='e')
-                
+
         self.__id_input.grid(row=2, column=1, ipady=3, sticky='e')
         self.__update_btn.grid(row=15, column=1, sticky='e')
 

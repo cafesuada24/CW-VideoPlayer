@@ -46,7 +46,7 @@ class EventHandlers:
         if not id:
             return False
         if id in General().play_list:
-            msgbox.showerror('Add error', 'Already added!')            
+            msgbox.showerror('Add error', 'Already added!')
             return False
         item = General().data[id]
         General().play_list.add(item)
@@ -58,7 +58,9 @@ class EventHandlers:
         if not id:
             return False
         if id not in General().play_list:
-            msgbox.showerror('Remove error', 'Seleted item is not in playlist!')
+            msgbox.showerror(
+                'Remove error', 'Seleted item is not in playlist!'
+            )
             return False
         General().play_list.remove(id)
         return True

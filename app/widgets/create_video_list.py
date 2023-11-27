@@ -56,13 +56,13 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
         )
         ttk.Label(self, text='ID').grid(row=4, column=0, sticky='w')
         for idx in range(0, 3 + len(self.COLUMNS)):
-            row = 2 * idx + 1 
+            row = 2 * idx + 1
             ttk.Separator(self, orient='horizontal').grid(
                 row=row, column=0, columnspan=2, sticky='nsew'
             )
         self.__playlist.grid(row=2, column=0, columnspan=2)
         self.__id_entry.grid(row=4, column=1, ipady=3, sticky='nsew')
-        
+
         for idx, (attr, text) in enumerate(zip(self.HEADINGS, self.__texts)):
             row = 2 * (idx + 3)
             ttk.Label(self, text=attr).grid(row=row, column=0, sticky='w')
@@ -79,9 +79,7 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
                 text.display('')
             return
         data = General().data[id]
-        for idx, col in enumerate(
-            self.COLUMNS
-        ):
+        for idx, col in enumerate(self.COLUMNS):
             self.__texts[idx].display(data[col])
 
     def display_playlist(self, call_back):
