@@ -8,7 +8,7 @@ CREATE TABLE videos (
   director   VARCHAR(255) DEFAULT 'Unknown',
   rating     INTEGER      DEFAULT 0,
   play_count INTEGER      DEFAULT 0,
-  file_name  VARCHAR(255) NOT NULL UNIQUE
+  file_path  VARCHAR(255) NOT NULL UNIQUE
 );
 
 CREATE TABLE playlist (
@@ -29,7 +29,7 @@ CREATE TABLE playlist_video (
     ON DELETE CASCADE
 );
 
-INSERT INTO videos (name, director, rating, file_name) 
+INSERT INTO videos (name, director, rating, file_path) 
 VALUES
 (
   'Ambient Nature Atmostphere',
