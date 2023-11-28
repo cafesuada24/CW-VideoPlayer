@@ -1,32 +1,37 @@
 import tkinter as tk
 from tkinter import ttk
-from collections.abc import Sequence
 
 from ..singleton import SingletonMeta
 from ..namespaces.event_handlers import EventHandlers
 from ..namespaces.tk_variable import TkVariable
 from ..core.video_library import LibraryItem
+from ..core.videos_db import VideosDB
+from .abstracts import AppFrame
 
 
-class VideoBrowser(ttk.Frame, metaclass=SingletonMeta):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class VideoBrowser(AppFrame, metaclass=SingletonMeta):
+    COLUMNS = (0, 1, 2, 3)
 
-        self.__columns = (0, 1, 2, 3)
+    def __init__(self, root):
+        super().__init__(root)
+
+    def _create_widgets(self):
         columns_width = (50, 300, 300, 150)
         self.__browser = ttk.Treeview(self, show='headings', height=20)
         self.__browser['columns'] = tuple(
-            LibraryItem.COLUMNS[column] for column in self.__columns
+            VideosDB.COLUMNS[column] for column in self.COLUMNS
         )
-        for column in self.__columns:
+        for column in self.COLUMNS:
             self.__browser.heading(
-                LibraryItem.COLUMNS[column], text=LibraryItem.HEADINGS[column]
+                VideosDB.COLUMNS[column], text=LibraryItem.HEADINGS[column]
             )
             self.__browser.column(
-                LibraryItem.COLUMNS[column], width=columns_width[column]
+                VideosDB.COLUMNS[column], width=columns_width[column]
             )
 
         self.__browser.bind('<<TreeviewSelect>>', self.__item_selected)
+
+    def _display_widgets(self):
         self.__browser.grid(row=0, column=0, sticky='nsew')
 
     def __clear_contents(self):
@@ -47,5 +52,5 @@ class VideoBrowser(ttk.Frame, metaclass=SingletonMeta):
         self.__clear_contents()
         for content in contents:
             self.__browser.insert(
-                '', tk.END, values=content.list_all(self.__columns)
+                '', tk.END, values=content.list_all(self.COLUMNS)
             )

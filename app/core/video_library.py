@@ -1,16 +1,10 @@
 import sqlite3 as sql
 from collections.abc import Sequence
 
+from .videos_db import VideosDB
+
 
 class LibraryItem:
-    COLUMNS = (
-        'video_id',
-        'name',
-        'director',
-        'rating',
-        'play_count',
-        'file_path',
-    )
     HEADINGS = ('ID', 'Name', 'Director', 'Rating', 'Play Count', 'File Path')
 
     def __init__(
@@ -30,62 +24,68 @@ class LibraryItem:
             int(play_count),
             str(path),
         )
-        self.__data = {key: val for key, val in zip(self.COLUMNS, values)}
+        self.__data = {key: val for key, val in zip(VideosDB.COLUMNS, values)}
 
     def list_all(
-        self, attrs: Sequence[str | int] = COLUMNS
+        self, attrs: Sequence[str | int] = VideosDB.COLUMNS
     ) -> tuple[int | str]:
         return tuple(self[attr] for attr in attrs)
 
     def get_id(self) -> int:
-        return self.__data[self.COLUMNS[0]]
+        return self[0]
 
     def get_name(self) -> str:
-        return self.__data[self.COLUMNS[1]]
+        return self[1]
 
     def get_director(self) -> str:
-        return self.__data[self.COLUMNS[2]]
+        return self[2]
 
     def get_rating(self) -> int:
-        return self.__data[self.COLUMNS[3]]
+        return self[3]
 
     def get_play_count(self) -> int:
-        return self.__data[self.COLUMNS[4]]
+        return self[4]
 
     def get_file_path(self) -> str:
-        return self.__data[self.COLUMNS[5]]
+        return self[5]
 
     def increment_play_count(self) -> None:
-        self.__data[self.COLUMNS[4]] += 1
+        self[4] += 1
 
     def set_name(self, name: str) -> None:
-        self.__data[self.COLUMNS[1]] = str(name)
+        self[1] = str(name)
 
     def sef_director(self, director: str) -> None:
-        self.__data[self.COLUMNS[2]] = str(director)
+        self[2] = str(director)
 
     def set_rating(self, rating: float) -> None:
-        self.__data[self.COLUMNS[3]] = float(rating)
+        self[3] = float(rating)
 
     def set_file_path(self, file_path: str) -> None:
-        self.__data[self.COLUMNS[5]] = str(file_path)
+        self[5] = str(file_path)
 
     def play(self):
         self.increment_play_count()
 
+    def __contains__(self, item: str | int):
+        if isinstance(item, int):
+            item = VideosDB.COLUMNS[item]
+        return item in self.__data
+
     def __getitem__(self, item: str | int) -> str | int:
         if isinstance(item, int):
-            item = self.COLUMNS[item]
-        if item not in self.__data:
+            item = VideosDB.COLUMNS[item]
+        if item not in self:
             raise AttributeError(f'invalid attribute: {item}')
         return self.__data[item]
 
     def __setitem__(self, item: str | int, new_val: str | int) -> None:
         if isinstance(item, int):
-            item = self.COLUMNS[item]
-        if item not in self.__data:
+            item = VideosDB.COLUMNS[item]
+        if item not in self:
             raise AttributeError('can\'t assign new attribue')
-        self.__data[item] = type(self.__data[item])(new_val)
+        self.__data[item] = type(self[item])(new_val)
+        VideosDB().update(self.get_id(), item, self[item])
 
     def save(self):
         pass

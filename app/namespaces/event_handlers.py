@@ -74,7 +74,7 @@ class EventHandlers:
         return True
 
     @staticmethod
-    def update_video(new_values: Sequence[tk.Entry]):
+    def update_video(columns, new_values: Sequence[tk.Entry]):
         id = TkVariable().get_selected_id()
         if not id:
             return
@@ -91,9 +91,6 @@ class EventHandlers:
             msgbox.showerror('Update error', 'Entry cannot be empty!')
             return
 
-        for index, new_val in enumerate(new_values):
-            if index == 0:
-                continue
-            if new_val != item[index]:
-                print(new_val)
-                item[index] = new_val
+        for col, new_val in zip(columns, new_values):
+            if new_val != item[col]:
+                item[col] = new_val

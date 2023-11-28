@@ -38,7 +38,9 @@ class UpdateVideoPanel(AppFrame, metaclass=SingletonMeta):
             self,
             text='Update',
             width=20,
-            command=lambda: EventHandlers().update_video(self.__vars),
+            command=lambda: EventHandlers().update_video(
+                self.COLUMNS, self.__vars
+            ),
         )
 
     def _display_widgets(self):
