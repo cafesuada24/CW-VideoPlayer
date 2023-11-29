@@ -112,12 +112,15 @@ class LibraryItemCollection:
     def play(self):
         for item in self:
             item.play()
+    
+    def values(self):
+        return self.__videos.values()
 
     def __getitem__(self, video_id) -> LibraryItem:
         return self.__videos[video_id]
 
     def __iter__(self):
-        return iter(self.__videos.values())
+        return iter(self.values())
 
     def __contains__(self, id):
         return id in self.__videos

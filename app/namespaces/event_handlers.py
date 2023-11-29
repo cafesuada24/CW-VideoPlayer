@@ -5,7 +5,8 @@ from collections.abc import Sequence
 
 from .tk_variable import TkVariable
 from .general import General
-from ..core.video_library import LibraryItem
+from ..core.video_library import LibraryItem, LibraryItemCollection
+from ..widgets.media_player import MediaPlayer
 
 
 class EventHandlers:
@@ -32,6 +33,8 @@ class EventHandlers:
         if not id:
             return
         General().data[id].play()
+        play_list = LibraryItemCollection((General().data[id],))
+        MediaPlayer().play(play_list)
 
     @staticmethod
     def get_video() -> LibraryItem:

@@ -35,19 +35,19 @@ VALUES
   'Ambient Nature Atmostphere',
   'Ambient Nature',
   3,
-  'ambient_nature.mp4'
+  '/home/serein/programming/Projects/CW_VideoPlayer/resources/videos/ambient_nature.mp4'
 ),
 (
   'Love',
   'Peggy Anke',
   2,
-  'love.mp4'
+  '/home/serein/programming/Projects/CW_VideoPlayer/resources/videos/love.mp4'
 ),
 (
   'Short Video 3',
   'Codix Damiyen',
   4,
-  'short_video_3.mp4'
+  '/home/serein/programming/Projects/CW_VideoPlayer/resources/videos/short_video_3.mp4'
 );
 
 INSERT INTO playlist (name)
