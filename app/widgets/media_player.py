@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
 
-from tkVideoPlayer import TkinterVideo
+from tkvideo import tkvideo
 
 from ..singleton import SingletonMeta
 from .abstracts import AppFrame
@@ -22,7 +22,7 @@ class MediaPlayer(tk.Tk, metaclass=SingletonMeta):
         self.columnconfigure(1, weight=1)
 
     def _create_widgets(self):
-        self.__media_player = TkinterVideo(self, scaled=True)
+        self.__media_player = ttk.Label(self)
         self.__playlist_box = tk.Listbox(self)
 
     def _display_widgets(self):
@@ -35,8 +35,8 @@ class MediaPlayer(tk.Tk, metaclass=SingletonMeta):
             return
         self.__playing = True
         playlist = tuple(play_list.values())
-        self.__media_player.load(playlist[0].get_file_path())
-        self.__media_player.play()
+        player = tkvideo(playlist[0].get_file_path(), self.__media_player, loop=1, size=(1280, 720))
+        player.play()
         self.mainloop()
         self.__playing = False
 
