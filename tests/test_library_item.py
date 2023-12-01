@@ -4,7 +4,7 @@ from app.core.video_library import LibraryItem, LibraryItemCollection
 from app.core.videos_db import VideosDB
 
 
-class TestLibrayItem:
+class TestLibraryItem:
     item = LibraryItem(1, 'Video1', 'Director', 3, 1, '/abc/def.mp4')
 
     def test_list_all(self):
@@ -72,3 +72,36 @@ class TestLibrayItem:
 
             self.item[5] = 'another/path'
             assert self.item.get_file_path() == 'another/path'
+
+
+class TestLibraryItemCollection:
+    item1 = LibraryItem(1, 'Video1', 'Director', 3, 1, '/abc/def.mp4')
+    item2 = LibraryItem(2, 'Video2', 'Dir', 2, 3, 'abc/egh.mp4')
+
+    collection = LibraryItemCollection((item1,))
+
+    def test_membership(self):
+       assert 1 in self.collection 
+       assert 2 not in self.collection
+       assert 0 not in self.collection
+
+    def test_add(self):
+        self.collection.add(self.item2)
+        assert 1 in self.collection
+        assert 2 in self.collection
+
+    def test_remove(self):
+        self.collection.remove(1)
+        assert 1 not in self.collection
+        assert 2 in self.collection
+
+    def test_getitem(self):
+        assert self.collection[2] == self.item2
+
+    def test_values(self):
+        assert tuple(self.collection.values()) == (self.item2,)
+
+    def test_iter(self):
+        for item in self.collection:
+            assert item == self.item2
+
