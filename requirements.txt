@@ -1,0 +1,4 @@
+av==9.1.1
+Pillow==10.1.0
+tkvideoplayer==2.5
+toml==0.10.2
