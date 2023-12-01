@@ -1,3 +1,5 @@
+"""This module contains Database connection class"""
+
 import sqlite3 as sql
 from pathlib import Path
 
@@ -16,29 +18,37 @@ class VideosDB(metaclass=SingletonMeta):
         'rating',
         'play_count',
         'file_path',
-    )
+    )  # all columns in database
 
     TABLE = 'videos'
 
     def __init__(self):
-        db_path = Path(CONFIG['path']['db'])
+        db_path = Path(CONFIG['path']['db'])  # get database path from config
         if not db_path.exists():
             db_path.parent.mkdir(parents=True, exist_ok=True)
             db_path.touch()
-        self.__conn = sql.connect(db_path)
-        self.__cursor = self.__conn.cursor()
-        self.__ensure_db()
+        self.__conn = sql.connect(db_path)  # Create database connection
+        self.__cursor = self.__conn.cursor()  # fetch database cursor
+        self.__ensure_db()  # makesure database exists
 
     @property
     def cursor(self):
         return self.__cursor
 
     def close(self):
+        """Close database connection"""
+
         self.__conn.commit()
         self.cursor.close()
         self.__conn.close()
 
     def update(self, id: int, column: str, val: str | int) -> None:
+        """Update database data
+        Args:
+            id - video_id
+            column - column to update
+            val - new value
+        """
         try:
             self.cursor.execute(
                 Queries.UPDATE.safe_substitute(
@@ -50,6 +60,8 @@ class VideosDB(metaclass=SingletonMeta):
             print(e)
 
     def get_all(self) -> tuple:
+        """Return database data"""
+
         ret = None
         try:
             self.cursor.execute(
@@ -61,13 +73,19 @@ class VideosDB(metaclass=SingletonMeta):
         return ret
 
     def __ensure_db(self):
+        """Makesure database exists"""
+
         if self.__cursor is None:
+            # if there is no cursor
             return
 
+        # Check table existance
         self.__cursor.execute(Queries.SELECT_TABLE, (self.TABLE,))
 
         if self.__cursor.fetchone() is not None:
+            # If the table exists
             return
 
         with open(CONFIG['path']['schema'], 'r') as f:
+            # Init database by database schema
             self.cursor.executescript(f.read())

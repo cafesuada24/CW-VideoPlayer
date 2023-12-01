@@ -1,3 +1,5 @@
+"""This module contains Footer widgets"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -11,10 +13,13 @@ class Footer(ttk.Frame, metaclass=SingletonMeta):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
 
-        self.__back_btn = ttk.Button(self, text='Back', command=self.__back)
+        self.__back_btn = ttk.Button(
+            self, text='Back', command=self.__back
+        )  # Back to menu when clicked
 
         ttk.Label(self, text='Version 1.2').grid(row=0, column=1, sticky='e')
         self.__back_btn.grid(row=0, column=0, sticky='w')
 
     def __back(self):
+        """Back to menu"""
         self._root().display_frame('menu')

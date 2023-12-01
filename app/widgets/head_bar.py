@@ -1,3 +1,5 @@
+"""This module contains Headbar widget"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -11,6 +13,7 @@ class HeadBar(ttk.Frame, metaclass=SingletonMeta):
     def __init__(self, root):
         super().__init__(root)
 
+        # configuring layout
         for col in range(6):
             self.columnconfigure(col, weight=1)
         self.columnconfigure(6, weight=2, minsize=200)

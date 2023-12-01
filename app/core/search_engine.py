@@ -1,3 +1,5 @@
+"""This module contains Search Engine classes"""
+
 from typing import Sequence
 
 # class Trie:
@@ -37,6 +39,8 @@ from typing import Sequence
 
 
 class HashMap:
+    """Search algorithm Hashmap"""
+
     def __init__(self):
         self.__data = dict()
 
@@ -48,13 +52,9 @@ class HashMap:
     def search_prefix(self, prefix: str):
         found = set()
         for key, val in self.__data.items():
-            if key.startswith(prefix):
+            if key.startswith(prefix):  # if the value match prefix
                 found |= val
         return found
-
-    # def remove(self, text):
-    #     if text not in self.__data:
-    #         return
 
 
 class SearchEngine:
@@ -67,14 +67,6 @@ class SearchEngine:
             self.__ds.insert(text, index)
 
     def search_prefix(self, prefix):
+        """Returns the ids that has name or author match the prefix"""
+
         return self.__ds.search_prefix(prefix)
-
-
-if __name__ == '__main__':
-    data = ['abc', 'abcde', 'author1', 'author2']
-    trie = SearchEngine(zip(data, range(len(data))))
-
-    prefixes = ['ab', 'a', 'author', 'author3']
-
-    for prefix in prefixes:
-        print(trie.search_prefix(prefix))

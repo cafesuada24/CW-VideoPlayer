@@ -1,3 +1,5 @@
+"""This module contains root of all widgets in the application"""
+
 import sys
 import traceback
 import tkinter as tk
@@ -17,20 +19,26 @@ from .widgets.media_player import MediaPlayer
 
 
 class VideoPlayer(tk.Tk):
+    """Root class"""
+
     def __init__(self):
         super().__init__()
 
-        self.__curr_frame = None
-        self.__frames = {}
+        self.__curr_frame = None  # current displaying frame
+        self.__frames = {}  # frames call information
 
         self.title('Video Player')
         self.columnconfigure(0, weight=1)
         self.rowconfigure(0, weight=1)
         self.resizable(False, False)
         self.__create_widgets()
-        self.display_frame('menu')
+        self.display_frame('menu')  # display the start menu
 
     def display_frame(self, frame):
+        """Change to the specific frame
+        Args:
+            frame - name of the frame to switch
+        """
         try:
             frame, kwargs = self.__frames[frame]
 
@@ -39,11 +47,12 @@ class VideoPlayer(tk.Tk):
             traceback.print_stack(file=sys.stderr)
         else:
             if self.__curr_frame is not None:
-                self.__curr_frame.grid_forget()
+                self.__curr_frame.grid_forget()  # Hide current frame
             self.__curr_frame = frame
             self.__curr_frame.display(**kwargs)
 
     def __create_widgets(self):
+        # Create all singleton widgets
         self.__main_layout = MainLayout(self)
         MediaPlayer(self)
         Menu(self)
@@ -54,6 +63,7 @@ class VideoPlayer(tk.Tk):
         UpdateVideoPanel(self.__main_layout)
         CreateVideoListPanel(self.__main_layout)
 
+        # Store all frame invoking information
         self.__frames['menu'] = (Menu(), {})
         self.__frames['check_videos'] = (
             self.__main_layout,

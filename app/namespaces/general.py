@@ -1,3 +1,5 @@
+"""This module contains namespace of general purposes variable"""
+
 from ..singleton import SingletonMeta
 from ..core.videos_db import VideosDB
 from ..core.search_engine import SearchEngine
@@ -6,6 +8,11 @@ from ..core.search_engine import SearchEngine
 
 
 class General(metaclass=SingletonMeta):
+    """General purpose namespace
+
+    The purpose of @property is for readbility and preventing changes
+    """
+
     def __init__(self):
         data = VideosDB().cursor.execute('SELECT * FROM videos;')
         self.__data = LibraryItemCollection.from_sequences(data.fetchall())

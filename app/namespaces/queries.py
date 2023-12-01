@@ -1,3 +1,5 @@
+"""This module contains namespace of database query strings"""
+
 from string import Template
 from dataclasses import dataclass
 

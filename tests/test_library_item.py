@@ -9,9 +9,20 @@ class TestLibrayItem:
 
     def test_list_all(self):
         assert self.item.list_all((0, 1, 2)) == (1, 'Video1', 'Director')
-        assert self.item.list_all(('file_path', 'video_id', 'play_count')) == ('/abc/def.mp4', 1, 1)
-        assert self.item.list_all() == (1, 'Video1', 'Director', 3, 1, '/abc/def.mp4')
-    
+        assert self.item.list_all(('file_path', 'video_id', 'play_count')) == (
+            '/abc/def.mp4',
+            1,
+            1,
+        )
+        assert self.item.list_all() == (
+            1,
+            'Video1',
+            'Director',
+            3,
+            1,
+            '/abc/def.mp4',
+        )
+
     def test_init_value(self):
         assert self.item.get_id() == 1
         assert self.item.get_name() == 'Video1'
@@ -61,5 +72,3 @@ class TestLibrayItem:
 
             self.item[5] = 'another/path'
             assert self.item.get_file_path() == 'another/path'
-
-    

@@ -1,3 +1,5 @@
+"""This module contains Video related classes"""
+
 import sqlite3 as sql
 from collections.abc import Sequence
 
@@ -5,7 +7,16 @@ from .videos_db import VideosDB
 
 
 class LibraryItem:
-    HEADINGS = ('ID', 'Name', 'Director', 'Rating', 'Play Count', 'File Path')
+    """The class represents the video"""
+
+    HEADINGS = (
+        'ID',
+        'Name',
+        'Director',
+        'Rating',
+        'Play Count',
+        'File Path',
+    )  # heading corresponded to database columns
 
     def __init__(
         self,
@@ -24,11 +35,20 @@ class LibraryItem:
             int(play_count),
             str(path),
         )
-        self.__data = {key: val for key, val in zip(VideosDB.COLUMNS, values)}
+        self.__data = {
+            key: val for key, val in zip(VideosDB.COLUMNS, values)
+        }  # store data by id
 
     def list_all(
         self, attrs: Sequence[str | int] = VideosDB.COLUMNS
     ) -> tuple[int | str]:
+        """List attributes by columns
+        Args:
+            attrs - columns to list
+        Returns:
+            tuple of attributes
+        """
+
         return tuple(self[attr] for attr in attrs)
 
     def get_id(self) -> int:
@@ -65,11 +85,15 @@ class LibraryItem:
         self[5] = str(file_path)
 
     def __contains__(self, item: str | int):
+        """Check if an attribute exists"""
+
         if isinstance(item, int):
             item = VideosDB.COLUMNS[item]
         return item in self.__data
 
     def __getitem__(self, item: str | int) -> str | int:
+        """Get item by column or index"""
+
         if isinstance(item, int):
             item = VideosDB.COLUMNS[item]
         if item not in self:
@@ -77,12 +101,15 @@ class LibraryItem:
         return self.__data[item]
 
     def __setitem__(self, item: str | int, new_val: str | int) -> None:
+        """Set value by column or index"""
+
         if isinstance(item, int):
             item = VideosDB.COLUMNS[item]
         if item not in self:
             raise AttributeError('can\'t assign new attribue')
         self.__data[item] = type(self[item])(new_val)
         VideosDB().update(self.get_id(), item, self[item])
+
 
 class LibraryItemCollection:
     def __init__(self, videos: Sequence[LibraryItem] = None):
@@ -93,6 +120,12 @@ class LibraryItemCollection:
 
     @classmethod
     def from_sequences(cls, videos: Sequence[Sequence]):
+        """Alternative class constructor
+        Args:
+            Videos data by columns
+        Returns:
+            new class instance
+        """
         videos = (LibraryItem(*video) for video in videos)
         return cls(videos)
 

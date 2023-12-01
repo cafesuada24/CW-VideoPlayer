@@ -1,3 +1,5 @@
+"""This module contains application's main layout"""
+
 import tkinter as tk
 from tkinter import ttk
 
@@ -9,6 +11,17 @@ from .abstracts import AppFrame
 
 
 class MainLayout(AppFrame, metaclass=SingletonMeta):
+    """Main layout used in multiple windows
+    Layout:
+        3 rows
+        2 columns
+    Widgets (rows, columns):
+        Head bar: (0, 0)
+        Browser: (1, 0)
+        Right Panel: (0-1, 1)
+        Footer: (2, 0-1)
+    """
+
     def __init__(self, root):
         super().__init__(root)
 
@@ -20,14 +33,16 @@ class MainLayout(AppFrame, metaclass=SingletonMeta):
 
     def _create_widgets(self):
         self._head_bar = None
-        self._rpanel = None
+        self._rpanel = None  # Right panel
         self._footer = None
-        self._browser = None
+        self._browser = None  # i.e. Video Browser
 
     def _display_widgets(self):
         pass
 
     def __relayout(self):
+        """Re-grid all components"""
+
         self._head_bar.grid(row=0, column=0, sticky='nsew')
         self._browser.grid(row=1, column=0, sticky='nsew')
         self._rpanel.grid(row=0, column=1, rowspan=2, sticky='nsew')
@@ -42,6 +57,8 @@ class MainLayout(AppFrame, metaclass=SingletonMeta):
         pass
 
     def display(self, head_bar=None, browser=None, rpanel=None, footer=None):
+        """Remove previous widgets and apply new widgets"""
+
         if self._head_bar:
             self._head_bar.grid_forget()
         if self._browser:
