@@ -66,6 +66,7 @@ class VideoBrowser(AppFrame, metaclass=SingletonMeta):
                 id=item.get_id(),
                 values=item.list_all(self.COLUMNS),
             )
-
-        first_element = int(self.__browser.get_children()[0])
-        self.__browser.selection_set(first_element)
+        id = TkVariable().get_selected_id(display_msg=False)
+        if not id:
+            id = int(self.__browser.get_children()[0])
+        self.__browser.selection_set(id)

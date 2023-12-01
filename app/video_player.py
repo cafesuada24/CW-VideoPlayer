@@ -13,6 +13,7 @@ from .widgets.check_videos import CheckVideosPanel
 from .widgets.create_video_list import CreateVideoListPanel
 from .widgets.update_videos import UpdateVideoPanel
 from .widgets.menu import Menu
+from .widgets.media_player import MediaPlayer
 
 
 class VideoPlayer(tk.Tk):
@@ -44,6 +45,7 @@ class VideoPlayer(tk.Tk):
 
     def __create_widgets(self):
         self.__main_layout = MainLayout(self)
+        MediaPlayer(self)
         Menu(self)
         VideoBrowser(self.__main_layout)
         HeadBar(self.__main_layout)

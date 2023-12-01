@@ -64,9 +64,6 @@ class LibraryItem:
     def set_file_path(self, file_path: str) -> None:
         self[5] = str(file_path)
 
-    def play(self):
-        self.increment_play_count()
-
     def __contains__(self, item: str | int):
         if isinstance(item, int):
             item = VideosDB.COLUMNS[item]
@@ -87,9 +84,6 @@ class LibraryItem:
         self.__data[item] = type(self[item])(new_val)
         VideosDB().update(self.get_id(), item, self[item])
 
-    def save(self):
-        pass
-
 
 class LibraryItemCollection:
     def __init__(self, videos: Sequence[LibraryItem] = None):
@@ -109,10 +103,6 @@ class LibraryItemCollection:
     def remove(self, id: int) -> None:
         del self.__videos[id]
 
-    def play(self):
-        for item in self:
-            item.play()
-    
     def values(self):
         return self.__videos.values()
 
