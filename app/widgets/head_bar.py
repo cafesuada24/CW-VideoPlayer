@@ -7,9 +7,10 @@ from ..singleton import SingletonMeta
 from .video_browser import VideoBrowser
 from ..namespaces.event_handlers import EventHandlers
 from ..namespaces.tk_variable import TkVariable
+from ..widgets.abstracts import AppFrame
 
 
-class HeadBar(ttk.Frame, metaclass=SingletonMeta):
+class HeadBar(AppFrame, metaclass=SingletonMeta):
     def __init__(self, root):
         super().__init__(root)
 
@@ -17,8 +18,8 @@ class HeadBar(ttk.Frame, metaclass=SingletonMeta):
         for col in range(6):
             self.columnconfigure(col, weight=1)
         self.columnconfigure(6, weight=2, minsize=200)
-
-        # Create widgets
+    
+    def _create_widgets(self):
         self.__list_video_btn = ttk.Button(
             self,
             text='List All Videos',
@@ -41,7 +42,7 @@ class HeadBar(ttk.Frame, metaclass=SingletonMeta):
             self, textvariable=TkVariable().search_entry
         )
 
-        # Display widgets
+    def _display_widgets(self):
         ttk.Label(self, text='Sort by ').grid(row=0, column=1, sticky='e')
         ttk.Label(self, text='Sort order ').grid(row=0, column=3, sticky='e')
         ttk.Label(self, text='Search ').grid(row=0, column=5, sticky='e')
