@@ -64,6 +64,7 @@ class VideosDB(metaclass=SingletonMeta):
 
         ret = None
         try:
+            self.__conn.commit()
             self.cursor.execute(
                 Queries.SELECT_ALL.safe_substitute(table=self.TABLE)
             )
