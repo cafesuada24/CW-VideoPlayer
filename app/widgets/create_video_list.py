@@ -23,7 +23,9 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
         self.columnconfigure(1, weight=3)
 
     def _create_widgets(self):
-        self.__playlist = tk.Listbox(self, width=50)
+        self.__playlist_fr = ttk.Frame(self)
+        self.__playlist = tk.Listbox(self.__playlist_fr, width=45)
+        self.__sb = ttk.Scrollbar(self.__playlist_fr, orient='vertical')
         self.__id_entry = ttk.Entry(
             self, textvariable=TkVariable().selected_id
         )
@@ -50,6 +52,9 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
             command=self.display_playlist(EventHandlers().play_playlist),
         )
 
+        self.__playlist.config(yscrollcommand=self.__sb.set)
+        self.__sb.config(command=self.__playlist.yview)
+
     def _display_widgets(self):
         ttk.Label(self, text='Create video list').grid(
             row=0, column=0, columnspan=2
@@ -60,7 +65,7 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
             ttk.Separator(self, orient='horizontal').grid(
                 row=row, column=0, columnspan=2, sticky='nsew'
             )
-        self.__playlist.grid(row=2, column=0, columnspan=2)
+        self.__playlist_fr.grid(row=2, column=0, columnspan=2)
         self.__id_entry.grid(row=4, column=1, ipady=3, sticky='nsew')
 
         for idx, (attr, text) in enumerate(zip(self.HEADINGS, self.__texts)):
@@ -71,6 +76,8 @@ class CreateVideoListPanel(AppFrame, metaclass=SingletonMeta):
         self.__add_btn.grid(column=0, row=8, columnspan=2, sticky='w')
         self.__remove_btn.grid(column=1, row=8, sticky='e')
         self.__play_btn.grid(column=0, columnspan=2, sticky='we')
+        self.__playlist.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.__sb.pack(side=tk.RIGHT, fill=tk.Y)
 
     def __display_name(self, *ignore):
         id = TkVariable().get_selected_id(display_msg=False)

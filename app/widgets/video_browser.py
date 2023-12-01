@@ -21,8 +21,10 @@ class VideoBrowser(AppFrame, metaclass=SingletonMeta):
     def _create_widgets(self):
         columns_width = (50, 300, 300, 150)
         self.__browser = ttk.Treeview(self, show='headings', height=20)
-        self.__scrollbar = ttk.Scrollbar(self, orient='vertical', command=self.__browser.yview)
-        self.__browser['yscrollcommand'] = self.__scrollbar.set
+        self.__scrollbar = ttk.Scrollbar(
+            self, orient='vertical', command=self.__browser.yview
+        )
+        self.__browser.config(yscrollcommand=self.__scrollbar.set)
         self.__browser['columns'] = tuple(
             VideosDB.COLUMNS[column] for column in self.COLUMNS
         )
@@ -43,7 +45,7 @@ class VideoBrowser(AppFrame, metaclass=SingletonMeta):
     def __clear_contents(self):
         for item in self.__browser.get_children():
             self.__browser.delete(item)
-    
+
     def __item_selected(self, *ignore):
         selected = self.__browser.selection()
         if not selected:
@@ -59,8 +61,11 @@ class VideoBrowser(AppFrame, metaclass=SingletonMeta):
         self.__clear_contents()
         for item in contents:
             self.__browser.insert(
-                '', tk.END, id=item.get_id(), values=item.list_all(self.COLUMNS)
+                '',
+                tk.END,
+                id=item.get_id(),
+                values=item.list_all(self.COLUMNS),
             )
-        
+
         first_element = int(self.__browser.get_children()[0])
         self.__browser.selection_set(first_element)
