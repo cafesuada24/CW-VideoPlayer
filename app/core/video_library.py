@@ -55,7 +55,7 @@ class LibraryItem:
     def set_name(self, name: str) -> None:
         self[1] = str(name)
 
-    def sef_director(self, director: str) -> None:
+    def set_director(self, director: str) -> None:
         self[2] = str(director)
 
     def set_rating(self, rating: float) -> None:
@@ -83,7 +83,6 @@ class LibraryItem:
             raise AttributeError('can\'t assign new attribue')
         self.__data[item] = type(self[item])(new_val)
         VideosDB().update(self.get_id(), item, self[item])
-
 
 class LibraryItemCollection:
     def __init__(self, videos: Sequence[LibraryItem] = None):
