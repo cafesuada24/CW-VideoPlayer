@@ -22,8 +22,8 @@ class VideosDB(metaclass=SingletonMeta):
 
     TABLE = 'videos'
 
-    def __init__(self):
-        db_path = Path(CONFIG['path']['db'])  # get database path from config
+    def __init__(self, db_path=None):
+        db_path = db_path or Path(CONFIG['path']['db'])  # get database path from config
         if not db_path.exists():
             db_path.parent.mkdir(parents=True, exist_ok=True)
             db_path.touch()
