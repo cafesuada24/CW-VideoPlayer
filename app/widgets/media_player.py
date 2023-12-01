@@ -7,7 +7,6 @@ import datetime
 from tkVideoPlayer import TkinterVideo
 
 from ..singleton import SingletonMeta
-from .abstracts import AppFrame
 from ..core.videos_db import VideosDB
 from ..core.video_library import LibraryItem
 
