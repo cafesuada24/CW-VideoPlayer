@@ -18,7 +18,7 @@ class HeadBar(AppFrame, metaclass=SingletonMeta):
         for col in range(6):
             self.columnconfigure(col, weight=1)
         self.columnconfigure(6, weight=2, minsize=200)
-    
+
     def _create_widgets(self):
         self.__list_video_btn = ttk.Button(
             self,

@@ -1,6 +1,7 @@
 import pytest
 from app.core.search_engine import HashMap, SearchEngine
 
+
 class TestHashMap:
     def setup_method(self):
         self.hash_map = HashMap()
@@ -15,9 +16,12 @@ class TestHashMap:
         self.hash_map.insert('testing', 3)
         assert self.hash_map.search_prefix('test') == {1, 2, 3}
 
+
 class TestSearchEngine:
     def setup_method(self):
-        self.search_engine = SearchEngine([('test', 1), ('test', 2), ('testing', 3)])
+        self.search_engine = SearchEngine(
+            [('test', 1), ('test', 2), ('testing', 3)]
+        )
 
     def test_search_prefix(self):
         assert self.search_engine.search_prefix('test') == {1, 2, 3}

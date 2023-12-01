@@ -81,9 +81,9 @@ class TestLibraryItemCollection:
     collection = LibraryItemCollection((item1,))
 
     def test_membership(self):
-       assert 1 in self.collection 
-       assert 2 not in self.collection
-       assert 0 not in self.collection
+        assert 1 in self.collection
+        assert 2 not in self.collection
+        assert 0 not in self.collection
 
     def test_add(self):
         self.collection.add(self.item2)
@@ -104,4 +104,3 @@ class TestLibraryItemCollection:
     def test_iter(self):
         for item in self.collection:
             assert item == self.item2
-

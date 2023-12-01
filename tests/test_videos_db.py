@@ -27,4 +27,6 @@ class TestVideosDB:
     def test_close(self):
         self.db.close()
         with pytest.raises(sqlite3.ProgrammingError):
-            self.db.cursor.execute(Queries.SELECT_ALL.safe_substitute(table=self.db.TABLE))
+            self.db.cursor.execute(
+                Queries.SELECT_ALL.safe_substitute(table=self.db.TABLE)
+            )
