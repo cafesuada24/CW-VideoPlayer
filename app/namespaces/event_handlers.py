@@ -28,13 +28,12 @@ class EventHandlers:
         )
 
     @staticmethod
-    def play_video() -> LibraryItem:
-        id = TkVariable().get_selected_id()
-        if not id:
+    def play_video():
+        video = EventHandlers.get_video()
+        if not video:
             return
-        General().data[id].play()
-        play_list = LibraryItemCollection((General().data[id],))
-        MediaPlayer().play(play_list)
+        playlist = LibraryItemCollection((video,))
+        MediaPlayer().play(playlist)
 
     @staticmethod
     def get_video() -> LibraryItem:
@@ -45,14 +44,8 @@ class EventHandlers:
 
     @staticmethod
     def add_selected_to_playlist() -> bool:
-        id = TkVariable().get_selected_id()
-        if not id:
-            return False
-        if id in General().play_list:
-            msgbox.showerror('Add error', 'Already added!')
-            return False
-        item = General().data[id]
-        General().play_list.add(item)
+        video = EventHandlers.get_video()
+        General().play_list.add(video)
         return True
 
     @staticmethod
@@ -73,21 +66,20 @@ class EventHandlers:
         if not General().play_list:
             msgbox.showerror('Play error', 'Cannot play an empty playlist!')
             return False
-        General().play_list.play()
+        MediaPlayer().play(General().play_list)
         return True
 
     @staticmethod
     def update_video(columns, new_values: Sequence[tk.Entry]):
-        id = TkVariable().get_selected_id()
-        if not id:
+        video = EventHandlers.get_video()
+        if not video:
             return
         try:
             new_values = tuple(item.get() for item in new_values)
         except tk._tkinter.TclError as e:
             msgbox.showinfo('Update error', e)
             return
-        item = General().data[id]
-        if all(val == item[index] for index, val in enumerate(new_values)):
+        if all(val == video[index] for index, val in zip(columns, new_values)):
             msgbox.showinfo('Update', 'Nothing to update!')
             return
         if any(not val for val in new_values if isinstance(val, str)):
@@ -95,5 +87,5 @@ class EventHandlers:
             return
 
         for col, new_val in zip(columns, new_values):
-            if new_val != item[col]:
-                item[col] = new_val
+            if new_val != video[col]:
+                video[col] = new_val
