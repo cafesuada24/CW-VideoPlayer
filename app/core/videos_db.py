@@ -1,5 +1,6 @@
 """This module contains Database connection class"""
 
+import tkinter.messagebox as msgbox
 import sqlite3 as sql
 from pathlib import Path
 
@@ -31,7 +32,7 @@ class VideosDB(metaclass=SingletonMeta):
             db_path.touch()
         self.__conn = sql.connect(db_path)  # Create database connection
         self.__cursor = self.__conn.cursor()  # fetch database cursor
-        self.__ensure_db()  # makesure database exists
+        self.__ensure_db()
 
     @property
     def cursor(self):
@@ -59,7 +60,7 @@ class VideosDB(metaclass=SingletonMeta):
                 (val, id),
             )
         except sql.OperationalError as e:
-            print(e)
+            msgbox.showerror("Database error", message=e)
 
     def get_all(self) -> tuple:
         """Return database data"""
@@ -72,7 +73,8 @@ class VideosDB(metaclass=SingletonMeta):
             )
             ret = tuple(self.cursor.fetchall())
         except sql.OperationalError as e:
-            print(e)
+            msgbox.showerror("Database error", message=e)
+
         return ret
 
     def __ensure_db(self):

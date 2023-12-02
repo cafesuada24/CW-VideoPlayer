@@ -28,4 +28,10 @@ VALUES
   'Codix Damiyen',
   4,
   '/home/serein/programming/Projects/CW_VideoPlayer/resources/videos/short_video_3.mp4'
+),
+(
+  'Blah',
+  'haha',
+  2,
+  '/home/serein/programming/Projects/CW_VideoPlayer/resources/videos/haha.mp4'
 );

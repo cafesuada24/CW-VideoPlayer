@@ -29,6 +29,7 @@ class MediaPlayer(tk.Toplevel, metaclass=SingletonMeta):
         )  # Redefine close button 'x'
         self.__playlist = None  # Current play list
         self.__progress_value = tk.DoubleVar(self)  # Variable of progress bar
+        self.__video_playable = None  # is the current selected video playable
 
         self.rowconfigure(0, weight=6)
         self.rowconfigure(1, weight=1)
@@ -162,6 +163,11 @@ class MediaPlayer(tk.Toplevel, metaclass=SingletonMeta):
             video_ended=self.__video_ended,
         )  # create new video player object
         file_path = video.get_file_path()
+        self.__video_playable = Path(
+            file_path
+        ).exists()  # Validate video existance
+        if not self.__video_playable:
+            return
         self.__player.load(file_path)
         self.__progress_slider.config(to=0, from_=0)  # Reset the progress bar
         self.__progress_value.set(0)  #
@@ -172,10 +178,15 @@ class MediaPlayer(tk.Toplevel, metaclass=SingletonMeta):
         Args:
             value - a time frame to play in seconds
         """
+
         self.__player.seek(int(float(value)))
 
     def __play_pause(self):
         """Toggle play button between Play-Pause"""
+
+        if not self.__video_playable:
+            msgbox.showerror('Video error', message='Cannot play this video!')
+            return
 
         if self.__player.is_paused():
             self.__player.play()
@@ -206,8 +217,8 @@ class MediaPlayer(tk.Toplevel, metaclass=SingletonMeta):
                 return
         self.__playlist = playlist  # replace the playlist
         self.__refresh_playlist()
-        self.__play_video()
         self.deiconify()  # display the window
+        self.__play_video()
 
 
 class Player(TkinterVideo):

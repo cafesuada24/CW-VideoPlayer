@@ -2,7 +2,7 @@ import toml
 from pathlib import Path
 from types import MappingProxyType
 
-__version__ = '1.1.0'
+__version__ = '2.0.0'
 
 # Load config
 CONFIG = MappingProxyType(
