@@ -64,6 +64,11 @@ class EventHandlers:
         """
 
         video = EventHandlers.get_video()
+        if not video:
+            return False
+        if video.get_id() in General().play_list:
+            msgbox.showerror('Add error', 'This video has been added')
+            return False
         General().play_list.add(video)
         return True
 
@@ -80,7 +85,7 @@ class EventHandlers:
         if id not in General().play_list:
             # display error if the video is not in playlist
             msgbox.showerror(
-                'Remove error', 'Seleted item is not in playlist!'
+                'Remove error', 'This video is not in playlist!'
             )
             return False
         General().play_list.remove(id)

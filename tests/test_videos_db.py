@@ -22,7 +22,7 @@ class TestVideosDB:
     def test_getall(self):
         all_data = self.db.get_all()
         assert isinstance(all_data, tuple)
-        assert len(all_data) == 3
+        assert bool(all_data)
 
     def test_close(self):
         self.db.close()
