@@ -6,6 +6,7 @@ from tkinter import ttk
 from ..singleton import SingletonMeta
 from .. import __version__
 
+
 class Footer(ttk.Frame, metaclass=SingletonMeta):
     def __init__(self, root):
         super().__init__(root)
@@ -17,7 +18,9 @@ class Footer(ttk.Frame, metaclass=SingletonMeta):
             self, text='Back', command=self.__back
         )  # Back to menu when clicked
 
-        ttk.Label(self, text=f'Version {__version__}').grid(row=0, column=1, sticky='e')
+        ttk.Label(self, text=f'Version {__version__}').grid(
+            row=0, column=1, sticky='e'
+        )
         self.__back_btn.grid(row=0, column=0, sticky='w')
 
     def __back(self):

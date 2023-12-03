@@ -84,9 +84,7 @@ class EventHandlers:
             return False
         if id not in General().play_list:
             # display error if the video is not in playlist
-            msgbox.showerror(
-                'Remove error', 'This video is not in playlist!'
-            )
+            msgbox.showerror('Remove error', 'This video is not in playlist!')
             return False
         General().play_list.remove(id)
         return True
