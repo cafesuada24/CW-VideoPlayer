@@ -1,6 +1,6 @@
 # Video Player
 
-Video Player is an Python tkinter application
+Video Player is an Python tkinter application that can check video's information, play a video list or update video information
 
 ## Requirements
 
