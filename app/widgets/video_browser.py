@@ -65,8 +65,6 @@ class VideoBrowser(AppFrame, metaclass=SingletonMeta):
 
     def display_playlist(self) -> None:
         contents = EventHandlers.get_brower_items()  # Get all filtered videos
-        if not contents:
-            return
         # display contents
         self.__clear_contents()
         for item in contents:
